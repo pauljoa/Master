@@ -1,8 +1,10 @@
-﻿using System;
+﻿using Simulator.Utility;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+
 
 namespace Simulator
 {
@@ -10,8 +12,7 @@ namespace Simulator
     {
         static void Main(string[] args)
         {
-            Console.WriteLine("Hello World");
-            String reply = Console.ReadLine();
+            List<CSVFormat> demand = CSVParser.Parse("C:\\Users\\PaulJoakim\\source\\repos\\Master\\Simulator\\Simulator\\Data\\demand.csv").ToList();
         }
     }
 }
