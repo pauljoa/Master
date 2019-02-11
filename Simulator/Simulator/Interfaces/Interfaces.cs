@@ -6,21 +6,35 @@ using System.Threading.Tasks;
 
 namespace Simulator.Interfaces
 {
-    interface IComponent
+    #region Algorithm Interfaces
+    interface IAlgorithm
+    {
+        IDictionary<Guid, Double> CalculateSetpoints(IDictionary<Guid,ISysComponent> components, Double demand);
+
+    }
+
+    #endregion
+
+
+
+
+
+    #region Component Interfaces
+    interface ISysComponent
     {
         Guid Id { get; set; }
         String Name { get; set; }
-        Boolean LoadComponent(String type, String path);
+        Boolean LoadComponent(String type, String path, dynamic data);
     }
 
 
-    interface IProducer : IComponent
+    interface IProducer : ISysComponent
     {
         IConverter Converter { get; set; }
     }
 
 
-    interface IStorage :IComponent
+    interface IStorage :ISysComponent
     {
         Double Capacity { get; set;}
         Double SoC { get; set; }
@@ -29,14 +43,14 @@ namespace Simulator.Interfaces
     }
 
 
-    interface IFuel :IComponent
+    interface IFuel :ISysComponent
     {
         Double Capacity { get; set; }
         String Type { get; set; }
     }
 
 
-    interface IConnector :IComponent
+    interface IConnector :ISysComponent
     {
         Guid From { get; set; }
         Guid To { get; set; }
@@ -47,5 +61,5 @@ namespace Simulator.Interfaces
     {
         Double Efficiency { get; set; }
     }
-
+    #endregion
 }
