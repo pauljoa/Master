@@ -19,16 +19,37 @@ namespace Simulator.Utility
             foreach(JObject j in jsonObject as JArray)
             {
                 ModelConfig model = j.ToObject<ModelConfig>();
-                //Insert switch statement
-                ISysComponent component = new Battery(model.Id, model.Name);
-                component.LoadComponent(model.Type, model.Path, model.Data);
-                result.Add(component.Id, component);
+                ISysComponent component = null;
+                if(!VerifyModel(model))
+                {
+                    //Throw error?
+                    continue;
+                }
+                switch (model.Type)
+                {
+                    case "Battery":
+                        component = new Battery(model.Id, model.Name);
+                        component.LoadComponent(model.Type, model.Path, model.Data);
+                        result.Add(component.Id, component);
+                        break;
+                    case "ICE":
+                        component = new ICE(model.Id, model.Name);
+                        component.LoadComponent(model.Type, model.Path, model.Data);
+                        result.Add(component.Id, component);
+                        break;
+                }
             }
             return result;
-
         }
 
-
+        private static bool VerifyModel(ModelConfig model)
+        {
+            if(model.Name == "" || model.Id == null || model.Id == Guid.Empty || model.Type == "" || model.Type == "")
+            {
+                return false;
+            }
+            return true;
+        }
     }
     class ModelConfig
     {

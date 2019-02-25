@@ -26,9 +26,10 @@ namespace BattDll
 	public:
 		ICE(double MaxOutput, double Delay);
 
-		inline double GetOutput() const { return MaxOutput; };
-		inline double GetDelay() const { return Delay; };
+		inline double GetOutput() const { return MaxOutput;};
+		inline double GetDelay() const { return Delay;};
 		inline double GetCurrent() const { return CurrentOutput;};
+		inline double GetCurrentDelay() const { return CurrentDelay;};
 
 		bool Setpoint(double value);
 

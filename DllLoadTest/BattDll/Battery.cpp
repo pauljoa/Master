@@ -31,6 +31,7 @@ namespace BattDll
 		this->MaxOutput = MaxOutput;
 		this->Delay = Delay;
 		this->CurrentOutput = 0;
+		this->CurrentDelay = 0;
 	}
 	bool ICE::Setpoint(double value)
 	{

@@ -31,15 +31,21 @@ namespace Simulator.Interfaces
     interface IProducer : ISysComponent
     {
         IConverter Converter { get; set; }
+        double MaxOutput { get;}
+        double CurrentOutput { get;}
+        double Delay { get;}
+        double CurrentDelay { get; }
+        Boolean Setpoint(double value,bool isQuery);
     }
 
 
     interface IStorage :ISysComponent
     {
-        Double Capacity { get; set;}
-        Double SoC { get; set; }
-        Double Voltage { get; set; }
-        Double Current { get; set; }
+        Double Capacity { get;}
+        Double SoC { get;}
+        Double Voltage { get;}
+        Double Current { get;}
+        Boolean Setpoint(double value, bool isQuery);
     }
 
 

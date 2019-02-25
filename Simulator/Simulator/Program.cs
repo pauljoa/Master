@@ -17,8 +17,22 @@ namespace Simulator
             //List<CSVFormat> demand = CSVParser.Parse("C:\\Users\\PaulJoakim\\source\\repos\\Master\\Simulator\\Simulator\\Data\\demand.csv").ToList();
             
             //Sample configuration parsing
-            String JsonString = System.IO.File.ReadAllText(@"C:\Users\PaulJoakim\source\repos\DllLoadTest\Debug\config.txt");
+            String JsonString = System.IO.File.ReadAllText(@"C:\Users\PaulJoakim\source\repos\Master\DllLoadTest\Debug\config.txt");
             IDictionary<Guid, ISysComponent> components = JSONParser.ParseConfig(JsonString);
+            IAlgorithm algo = new Algorithms.SimpleAlgorithm(components);
+
+            foreach(var setpoint in algo.CalculateSetpoints(components, 200))
+            {
+                var component = components[setpoint.Key];
+                if (component is IStorage storage)
+                {
+                    storage.Setpoint(setpoint.Value, false);
+                }
+                else if (component is IProducer producer)
+                {
+                    producer.Setpoint(setpoint.Value, false);
+                }
+            }
         }
     }
 }

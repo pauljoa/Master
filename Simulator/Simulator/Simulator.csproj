@@ -58,6 +58,7 @@
     <Compile Include="Algorithms\SimpleAlgorithm.cs" />
     <Compile Include="Controller.cs" />
     <Compile Include="Implementations\Battery.cs" />
+    <Compile Include="Implementations\ICE.cs" />
     <Compile Include="Interfaces\Interfaces.cs" />
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />

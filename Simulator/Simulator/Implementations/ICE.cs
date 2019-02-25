@@ -8,32 +8,40 @@ using System.Threading.Tasks;
 
 namespace Simulator.Implementations
 {
-    class Battery : IStorage
+    class ICE : IProducer
     {
-        public double Capacity { get => Instance.Capacity;}
-        public double SoC { get => Instance.SoC;}
-        public double Voltage { get => Instance.Voltage;}
-        public double Current { get => Instance.Current;}
         private Guid _Id;
         private string _Name;
-        public Guid Id { get => _Id; set => _Id = value; }
-        public string Name { get => _Name; set => _Name = value; }
+        private IConverter _Converter;
 
-        public dynamic Instance { get; set; }
-
-        public Battery(Guid id, string name)
+        public ICE(Guid id, string name)
         {
             Id = id;
             Name = name;
         }
+
+        public Guid Id { get => _Id; set => _Id = value; }
+        public string Name { get => _Name; set => _Name = value; }
+
+        public dynamic Instance { get; set; }
+        public IConverter Converter { get => _Converter; set =>_Converter = value; }
+
+        public double MaxOutput => Instance.MaxOutput;
+
+        public double CurrentOutput => Instance.CurrentOutput;
+
+        public double Delay => Instance.Delay;
+
+        public double CurrentDelay => Instance.CurrentDelay;
+
         public bool LoadComponent(string type, string path, dynamic data)
         {
-            var Dll = Assembly.LoadFile(@""+path);
+            var Dll = Assembly.LoadFile(@"" + path);
             try
             {
                 var list = Dll.GetExportedTypes();
                 var typeList = list.Where(o => o.Name.Equals(type));
-                Instance = Activator.CreateInstance(typeList.First(), (Double)data.Capacity, (Double)data.SoC, (Double)data.Voltage, (Double)data.Current);
+                Instance = Activator.CreateInstance(typeList.First(), (Double)data.MaxOutput, (Double)data.Delay);
                 return true;
             }
             catch (Exception e)
@@ -41,12 +49,12 @@ namespace Simulator.Implementations
                 throw e;
             }
         }
-
-        public bool Setpoint(double value, bool isQuery)
+        //Value in Watt
+        public bool Setpoint(double value, bool isQuery = false)
         {
             if(isQuery)
             {
-                if (SoC != 0)
+                if(MaxOutput >= value)
                 {
                     return true;
                 }

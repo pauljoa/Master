@@ -38,6 +38,8 @@ namespace CLI
 			}
 		}
 	};
+
+
 	public ref class ICE : public ManagedObject<BattDll::ICE> {
 	public:
 		ICE(double MaxOutput, double Delay);
@@ -61,6 +63,13 @@ namespace CLI
 		public:
 			double get() {
 				return m_Instance->GetDelay();
+			}
+		}
+		property double CurrentDelay
+		{
+		public:
+			double get() {
+				return m_Instance->GetCurrentDelay();
 			}
 		}
 	};
