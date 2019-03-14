@@ -65,6 +65,7 @@
     <Compile Include="Utility\CSVParser.cs" />
     <Compile Include="Utility\DllLoader.cs" />
     <Compile Include="Utility\JSONParser.cs" />
+    <Compile Include="Implementations\PV.cs" />
     <Compile Include="Utility\Syntheziser.cs" />
   </ItemGroup>
   <ItemGroup>

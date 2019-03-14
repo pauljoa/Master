@@ -9,7 +9,7 @@ namespace Simulator.Interfaces
     #region Algorithm Interfaces
     interface IAlgorithm
     {
-        IDictionary<Guid, Double> CalculateSetpoints(IDictionary<Guid,ISysComponent> components, Double demand);
+        int CalculateSetpoints(IDictionary<Guid,ISysComponent> components, Double demand);
 
     }
 
@@ -31,21 +31,35 @@ namespace Simulator.Interfaces
     interface IProducer : ISysComponent
     {
         IConverter Converter { get; set; }
+        IList<Tuple<double,double>> Steps { get; set; }
         double MaxOutput { get;}
         double CurrentOutput { get;}
         double Delay { get;}
         double CurrentDelay { get; }
-        Boolean Setpoint(double value,bool isQuery);
+        //Returns the output possible for the component
+        double Setpoint(double value,bool isQuery);
+    }
+
+    interface IRenewable : ISysComponent
+    {
+        IConverter Converter { get; set; }
+        IList<double> Outputs { get; set; }
+        double MaxOutput { get; }
+        double CurrentOutput { get; }
     }
 
 
     interface IStorage :ISysComponent
     {
+        IList<Tuple<double, double>> Steps { get; set; }
         Double Capacity { get;}
         Double SoC { get;}
         Double Voltage { get;}
         Double Current { get;}
-        Boolean Setpoint(double value, bool isQuery);
+        Double CRate { get; }
+        Double MaxRate { get; }
+        //Returns the output possible for the component
+        double Setpoint(double value, bool isQuery);
     }
 
 

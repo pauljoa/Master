@@ -7,8 +7,8 @@ namespace CLI
 	public ref class Battery : public ManagedObject <BattDll::Battery>
 	{
 	public:
-		Battery(double Capacity, double SoC, double Voltage, double Current);
-		bool Setpoint(double value);
+		Battery(double Capacity, double SoC, double Voltage, double Current,double CRate);
+		double Setpoint(double value);
 		property double Capacity
 		{
 		public:
@@ -37,13 +37,27 @@ namespace CLI
 				return m_Instance->GetCurrent();
 			}
 		}
+		property double CRate
+		{
+		public:
+			double get() {
+				return m_Instance->GetCRate();
+			}
+		}
+		property double MaxRate
+		{
+		public:
+			double get() {
+				return m_Instance->GetMaxRate();
+			}
+		}
 	};
 
 
 	public ref class ICE : public ManagedObject<BattDll::ICE> {
 	public:
 		ICE(double MaxOutput, double Delay);
-		bool Setpoint(double value);
+		double Setpoint(double value);
 		property double MaxOutput 
 		{
 		public:

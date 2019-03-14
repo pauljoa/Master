@@ -7,6 +7,7 @@ using System.Threading.Tasks;
 using Simulator.Implementations;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Linq;
+using System.Runtime.Serialization;
 
 namespace Simulator.Utility
 {
@@ -34,6 +35,11 @@ namespace Simulator.Utility
                         break;
                     case "ICE":
                         component = new ICE(model.Id, model.Name);
+                        component.LoadComponent(model.Type, model.Path, model.Data);
+                        result.Add(component.Id, component);
+                        break;
+                    case "PV":
+                        component = new PV(model.Id, model.Name);
                         component.LoadComponent(model.Type, model.Path, model.Data);
                         result.Add(component.Id, component);
                         break;
@@ -67,5 +73,28 @@ namespace Simulator.Utility
 
 
         
+    }
+
+    class ModelConfigException : Exception
+    {
+        public ModelConfigException()
+        {
+
+        }
+
+        public ModelConfigException(string message) : base(message)
+        {
+
+        }
+
+        public ModelConfigException(string message, Exception innerException) : base(message, innerException)
+        {
+
+        }
+
+        protected ModelConfigException(SerializationInfo info, StreamingContext context) : base(info, context)
+        {
+
+        }
     }
 }

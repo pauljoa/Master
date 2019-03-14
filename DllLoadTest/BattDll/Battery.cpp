@@ -3,28 +3,44 @@
 
 #include "Battery.h"
 #include <iostream>
+
 namespace BattDll
 {
-	Battery::Battery(double Capacity, double SoC, double Voltage, double Current)
+	Battery::Battery(double Capacity, double SoC, double Voltage, double Current,double CRate)
 	{
 		this->Capacity = Capacity;
 		this->SoC = SoC;
 		this->Voltage = Voltage;
 		this->Current = Current;
+		this->CRate = CRate;
+		
 	}
 	//Setpoint for power output
-	bool Battery::Setpoint(double value)
+	double Battery::Setpoint(double value)
 	{
 		//Calculate output
 		double current = value / this->Voltage;
-		if (SoC != 0) {
-			this->Current = current;
-			return true;
-		}
-		else {
-			return false;
-		}
+		//std::cout.precision(10);
+		//std::cout << "State of Charge: ";
+		//std::cout << SoC << '\n';
 		
+		//Assuming Capacity is in Ah and timescale is in seconds SoC in percentage 0-100%
+		double Ws = (Capacity * Voltage * 3600) * (SoC / 100);
+		if (Ws - value > 0) {
+			double nWs = Ws - value;
+			//std::cout << "New setpoint: " << value << "\n Old W/s: " << Ws << '\n';
+			//std::cout << "New W/s: " << nWs << '\n';
+			//std::cout << "New SoC calculation variables: " << "Capacity: " << Capacity << '\n' << "Voltage: " << Voltage << '\n';
+			double nSoC = (nWs * 100) / (Capacity * Voltage * 3600);
+			//std::cout << "New State of Charge: " << nSoC << '\n';
+			SoC = nSoC;
+		}
+		//Battery is empty and cannot provide
+		else {
+			return -1;
+		}
+		this->Current = current;
+		return value;
 	}
 	ICE::ICE(double MaxOutput, double Delay)
 	{
@@ -33,13 +49,13 @@ namespace BattDll
 		this->CurrentOutput = 0;
 		this->CurrentDelay = 0;
 	}
-	bool ICE::Setpoint(double value)
+	double ICE::Setpoint(double value)
 	{
 		//Insert delay logic
 		if (value <= MaxOutput) {
 			this->CurrentOutput = value;
-			return true;
+			return CurrentOutput;
 		}
-		return false;
+		return -1;
 	}
 }

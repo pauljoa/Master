@@ -13,11 +13,13 @@ namespace Simulator.Implementations
         private Guid _Id;
         private string _Name;
         private IConverter _Converter;
+        private IList<Tuple<double, double>> _Steps;
 
         public ICE(Guid id, string name)
         {
             Id = id;
             Name = name;
+            _Steps = new List<Tuple<double, double>>();
         }
 
         public Guid Id { get => _Id; set => _Id = value; }
@@ -33,6 +35,9 @@ namespace Simulator.Implementations
         public double Delay => Instance.Delay;
 
         public double CurrentDelay => Instance.CurrentDelay;
+
+        public IList<Tuple<double, double>> Steps { get => _Steps; set => _Steps = value; }
+       
 
         public bool LoadComponent(string type, string path, dynamic data)
         {
@@ -50,20 +55,28 @@ namespace Simulator.Implementations
             }
         }
         //Value in Watt
-        public bool Setpoint(double value, bool isQuery = false)
+        public double Setpoint(double value, bool isQuery = false)
         {
             if(isQuery)
             {
-                if(MaxOutput >= value)
+                if(value < MaxOutput)
                 {
-                    return true;
+                    return value;
                 }
-                return false;
+                return -1;
             }
             else
             {
-                return Instance.Setpoint(value);
+                double retval = Instance.Setpoint(value);
+                Steps.Add(new Tuple<double, double>(value, retval));
+                return retval;
             }
         }
+
+        public bool Step(double value)
+        {
+            throw new NotImplementedException();
+        }
+
     }
 }

@@ -6,16 +6,18 @@ namespace BattDll
 	public:
 		const char* name;
 	private:
-		double Capacity, SoC, Voltage, Current;
+		double Capacity, SoC, Voltage, Current,CRate;
 	public:
-		Battery(double Capacity, double SoC, double Voltage, double Current);
+		Battery(double Capacity, double SoC, double Voltage, double Current,double CRate);
 		
 		inline double GetCapacity() const { return Capacity; };
 		inline double GetSoC() const { return SoC; };
 		inline double GetVoltage() const { return Voltage; };
 		inline double GetCurrent() const { return Current; };
+		inline double GetCRate() const { return CRate; };
+		inline double GetMaxRate() const { return CRate*Voltage*Capacity; };
 
-		bool Setpoint(double value);
+		double Setpoint(double value);
 	};
 	class ICE
 	{
@@ -31,7 +33,7 @@ namespace BattDll
 		inline double GetCurrent() const { return CurrentOutput;};
 		inline double GetCurrentDelay() const { return CurrentDelay;};
 
-		bool Setpoint(double value);
+		double Setpoint(double value);
 
 	};
 }

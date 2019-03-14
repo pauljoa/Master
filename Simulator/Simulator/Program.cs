@@ -6,6 +6,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using Newtonsoft.Json;
 
 
 namespace Simulator
@@ -14,25 +15,21 @@ namespace Simulator
     {
         static void Main(string[] args)
         {
-            //List<CSVFormat> demand = CSVParser.Parse("C:\\Users\\PaulJoakim\\source\\repos\\Master\\Simulator\\Simulator\\Data\\demand.csv").ToList();
-            
+            List<CSVFormat> demand = CSVParser.Parse("C:\\Users\\PaulJoakim\\source\\repos\\Master\\Simulator\\Simulator\\Data\\demand.csv").ToList();
             //Sample configuration parsing
             String JsonString = System.IO.File.ReadAllText(@"C:\Users\PaulJoakim\source\repos\Master\DllLoadTest\Debug\config.txt");
             IDictionary<Guid, ISysComponent> components = JSONParser.ParseConfig(JsonString);
             IAlgorithm algo = new Algorithms.SimpleAlgorithm(components);
-
-            foreach(var setpoint in algo.CalculateSetpoints(components, 200))
+            
+            foreach(var d in demand)
             {
-                var component = components[setpoint.Key];
-                if (component is IStorage storage)
+                if (algo.CalculateSetpoints(components, d.Value) == -1)
                 {
-                    storage.Setpoint(setpoint.Value, false);
-                }
-                else if (component is IProducer producer)
-                {
-                    producer.Setpoint(setpoint.Value, false);
+                    Console.WriteLine("Demand Not met");
+                    break;
                 }
             }
+            Console.WriteLine("Final SoC");
         }
     }
 }
