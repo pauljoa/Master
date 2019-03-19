@@ -11,21 +11,12 @@ namespace Simulator.Algorithms
     //Implements the most basic demand fulfillment 
     class SimpleAlgorithm : IAlgorithm
     {
-        private IList<IStorage> storages = new List<IStorage>();
-        private IList<IProducer> producers = new List<IProducer>();
+        protected IDictionary<Guid, IStorage> Batteries = new Dictionary<Guid, IStorage>();
+        protected IDictionary<Guid, ISysComponent> OtherComponents = new Dictionary<Guid, ISysComponent>();
         public SimpleAlgorithm(IDictionary<Guid, ISysComponent> components)
         {
-            foreach (var c in components.Values)
-            {
-                if (c is IStorage storage)
-                {
-                    storages.Add(storage);
-                }
-                else if (c is IProducer producer)
-                {
-                    producers.Add(producer);
-                }
-            }
+            Batteries = components.Where(o => o.Value is IStorage storage).ToDictionary(o => o.Key, o => (IStorage)o.Value);
+            OtherComponents = components.Where(o => !(o.Value is IStorage storage)).ToDictionary(o => o.Key, o => o.Value);
         }
 
         //Storage variables
@@ -74,8 +65,8 @@ namespace Simulator.Algorithms
         private IEnumerable<KeyValuePair<Guid,double>> CalculateWeights(IDictionary<Guid,ISysComponent> components)
         {
             IDictionary<Guid, double> weights = new Dictionary<Guid, double>();
-            IDictionary<Guid, IStorage> Batteries = components.Where(o => o.Value is IStorage storage).ToDictionary(o => o.Key, o => (IStorage)o.Value);
-            IDictionary<Guid, ISysComponent> OtherComponents = components.Where(o => !(o.Value is IStorage storage)).ToDictionary(o => o.Key, o => o.Value);
+            //IDictionary<Guid, IStorage> Batteries = components.Where(o => o.Value is IStorage storage).ToDictionary(o => o.Key, o => (IStorage)o.Value);
+            //IDictionary<Guid, ISysComponent> OtherComponents = components.Where(o => !(o.Value is IStorage storage)).ToDictionary(o => o.Key, o => o.Value);
             foreach (var batt in Batteries.Values)
             {
                 var weight = batt.MaxRate / (100 * batt.SoC);

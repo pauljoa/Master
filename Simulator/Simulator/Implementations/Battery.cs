@@ -19,7 +19,7 @@ namespace Simulator.Implementations
         public double SoC { get => Instance.SoC;}
         public double Voltage { get => Instance.Voltage;}
         public double Current { get => Instance.Current;}
-        public double CRate => Instance.CRate;
+        //public double CRate => Instance.CRate;
         public double MaxRate => Instance.MaxRate;
         public Guid Id { get => _Id; set => _Id = value; }
         public string Name { get => _Name; set => _Name = value; }

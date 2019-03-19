@@ -56,7 +56,7 @@ namespace Simulator.Interfaces
         Double SoC { get;}
         Double Voltage { get;}
         Double Current { get;}
-        Double CRate { get; }
+        //Double CRate { get; }
         Double MaxRate { get; }
         //Returns the output possible for the component
         double Setpoint(double value, bool isQuery);
