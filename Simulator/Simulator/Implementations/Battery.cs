@@ -40,8 +40,19 @@ namespace Simulator.Implementations
             var Dll = Assembly.LoadFile(@""+path);
             try
             {
+                
                 var list = Dll.GetExportedTypes();
                 var typeList = list.Where(o => o.Name.Equals(type));
+
+                var parameterInfo = typeList.First().GetConstructors().First().GetParameters();
+                List<object> parameters = new List<object>();
+                foreach(var info in parameterInfo)
+                {
+                    var value = data[info.Name];
+                    parameters.Add((Double)value);
+                    
+                }
+                //Instance = Activator.CreateInstance(typeList.First(),parameters.ToArray());
                 Instance = Activator.CreateInstance(typeList.First(), (Double)data.Capacity, (Double)data.SoC, (Double)data.Voltage, (Double)data.Current,(Double) data.CRate);
                 return true;
             }

@@ -43,6 +43,10 @@ namespace Simulator.Utility
                         component.LoadComponent(model.Type, model.Path, model.Data);
                         result.Add(component.Id, component);
                         break;
+                    default:
+                        //Generic implementation of ISysComponent
+
+                        break;
                 }
             }
             return result;
@@ -70,9 +74,6 @@ namespace Simulator.Utility
         public string Path;
         //Type specific data
         public dynamic Data;
-
-
-        
     }
 
     class ModelConfigException : Exception
