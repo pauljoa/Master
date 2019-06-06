@@ -13,8 +13,6 @@ namespace CLI
 		return retval;
 	}
 
-
-
 	//ICE Wrapper
 
 

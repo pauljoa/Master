@@ -26,28 +26,40 @@ namespace Simulator.Utility
                     //Throw error?
                     continue;
                 }
-                switch (model.Type)
-                {
-                    case "Battery":
-                        component = new Battery(model.Id, model.Name);
-                        component.LoadComponent(model.Type, model.Path, model.Data);
-                        result.Add(component.Id, component);
-                        break;
-                    case "ICE":
-                        component = new ICE(model.Id, model.Name);
-                        component.LoadComponent(model.Type, model.Path, model.Data);
-                        result.Add(component.Id, component);
-                        break;
-                    case "PV":
-                        component = new PV(model.Id, model.Name);
-                        component.LoadComponent(model.Type, model.Path, model.Data);
-                        result.Add(component.Id, component);
-                        break;
-                    default:
-                        //Generic implementation of ISysComponent
+                //Dynamic interface implementation
 
-                        break;
-                }
+
+                //Generic implementation of ISysComponent
+                component = new SysComponent(model.Id, model.Name);
+                var newType = DRII<ISysComponent>.DynamicInterfaceImplementation(typeof(IStorage),(SysComponent) component);
+                component.LoadComponent(model.Type, model.Path, model.Data);
+                //DRII<ISysComponent>.Implement<INewStorage>(component);
+                result.Add(component.Id, component);
+                //switch (model.Type)
+                //{
+                //    case "Battery":
+                //        component = new Battery(model.Id, model.Name);
+                //        component.LoadComponent(model.Type, model.Path, model.Data);
+                //        result.Add(component.Id, component);
+                //        break;
+                //    case "ICE":
+                //        component = new ICE(model.Id, model.Name);
+                //        component.LoadComponent(model.Type, model.Path, model.Data);
+                //        result.Add(component.Id, component);
+                //        break;
+                //    case "PV":
+                //        component = new PV(model.Id, model.Name);
+                //        component.LoadComponent(model.Type, model.Path, model.Data);
+                //        result.Add(component.Id, component);
+                //        break;
+                //    default:
+                //        //Generic implementation of ISysComponent
+                //        component = new SysComponent(model.Id, model.Name);
+                //        component.LoadComponent(model.Type, model.Path, model.Data);
+                //        TypeMixer<ISysComponent>.ExtendWith<IStorage>(component);
+                //        result.Add(component.Id, component);
+                //        break;
+                //}
             }
             return result;
         }

@@ -25,13 +25,15 @@ namespace Simulator.Interfaces
         Guid Id { get; set; }
         String Name { get; set; }
         Boolean LoadComponent(String type, String path, dynamic data);
+
+        IList<Tuple<double, double>> Steps { get; set; }
     }
 
 
     interface IProducer : ISysComponent
     {
         IConverter Converter { get; set; }
-        IList<Tuple<double,double>> Steps { get; set; }
+        //IList<Tuple<double,double>> Steps { get; set; }
         double MaxOutput { get;}
         double CurrentOutput { get;}
         double Delay { get;}
@@ -49,9 +51,9 @@ namespace Simulator.Interfaces
     }
 
 
-    interface IStorage :ISysComponent
+    interface IStorage : ISysComponent
     {
-        IList<Tuple<double, double>> Steps { get; set; }
+        
         Double Capacity { get;}
         Double SoC { get;}
         Double Voltage { get;}
@@ -61,7 +63,15 @@ namespace Simulator.Interfaces
         //Returns the output possible for the component
         double Setpoint(double value, bool isQuery);
     }
+    public interface INewStorage
+    {
+        String Testing { get; set; }
+    }
 
+    interface INewInheritedStorage :INewStorage
+    {
+        String TestingInherited { get; set; }
+    }
 
     interface IFuel :ISysComponent
     {

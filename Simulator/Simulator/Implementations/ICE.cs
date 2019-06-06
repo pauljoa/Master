@@ -44,9 +44,20 @@ namespace Simulator.Implementations
             var Dll = Assembly.LoadFile(@"" + path);
             try
             {
+                //var list = Dll.GetExportedTypes();
+                //var typeList = list.Where(o => o.Name.Equals(type));
+                //Instance = Activator.CreateInstance(typeList.First(), (Double)data.MaxOutput, (Double)data.Delay);
                 var list = Dll.GetExportedTypes();
                 var typeList = list.Where(o => o.Name.Equals(type));
-                Instance = Activator.CreateInstance(typeList.First(), (Double)data.MaxOutput, (Double)data.Delay);
+                var parameterInfo = typeList.First().GetConstructors().First().GetParameters();
+                List<object> parameters = new List<object>();
+                foreach (var info in parameterInfo)
+                {
+                    var value = data[info.Name];
+                    //info.ParameterType == typeof(T)
+                    parameters.Add((Double)value);
+                }
+                Instance = Activator.CreateInstance(typeList.First(), parameters.ToArray());
                 return true;
             }
             catch (Exception e)

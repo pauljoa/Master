@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 using Simulator.Interfaces;
 
 namespace Simulator.Implementations
@@ -13,6 +14,7 @@ namespace Simulator.Implementations
 
         public Guid Id { get => throw new NotImplementedException(); set => throw new NotImplementedException(); }
         public string Name { get => throw new NotImplementedException(); set => throw new NotImplementedException(); }
+        public IList<Tuple<double, double>> Steps { get => throw new NotImplementedException(); set => throw new NotImplementedException(); }
 
         public bool LoadComponent(string type, string path, dynamic data)
         {

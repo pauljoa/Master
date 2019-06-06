@@ -59,6 +59,7 @@
     <Compile Include="Controller.cs" />
     <Compile Include="Implementations\Battery.cs" />
     <Compile Include="Implementations\ICE.cs" />
+    <Compile Include="Implementations\SysComponent.cs" />
     <Compile Include="Interfaces\Interfaces.cs" />
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
@@ -67,6 +68,7 @@
     <Compile Include="Utility\JSONParser.cs" />
     <Compile Include="Implementations\PV.cs" />
     <Compile Include="Utility\Syntheziser.cs" />
+    <Compile Include="Utility\DRII.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="App.config" />
