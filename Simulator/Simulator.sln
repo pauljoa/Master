@@ -5,6 +5,8 @@ VisualStudioVersion = 15.0.27428.2005
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Simulator", "Simulator\Simulator.csproj", "{5A62F9EE-F558-43A8-996A-33DD440E5DD7}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Interfaces", "Interfaces\Interfaces.csproj", "{C8BB0BBB-9528-465B-8C08-E2C56EC599EC}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -15,6 +17,10 @@ Global
 		{5A62F9EE-F558-43A8-996A-33DD440E5DD7}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{5A62F9EE-F558-43A8-996A-33DD440E5DD7}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{5A62F9EE-F558-43A8-996A-33DD440E5DD7}.Release|Any CPU.Build.0 = Release|Any CPU
+		{C8BB0BBB-9528-465B-8C08-E2C56EC599EC}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{C8BB0BBB-9528-465B-8C08-E2C56EC599EC}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{C8BB0BBB-9528-465B-8C08-E2C56EC599EC}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{C8BB0BBB-9528-465B-8C08-E2C56EC599EC}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

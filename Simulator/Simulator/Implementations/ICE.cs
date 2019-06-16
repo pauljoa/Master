@@ -84,6 +84,11 @@ namespace Simulator.Implementations
             }
         }
 
+        public double Setpoint(double value)
+        {
+            throw new NotImplementedException();
+        }
+
         public bool Step(double value)
         {
             throw new NotImplementedException();

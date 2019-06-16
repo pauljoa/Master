@@ -15,10 +15,6 @@ namespace Simulator.Interfaces
 
     #endregion
 
-
-
-
-
     #region Component Interfaces
     interface ISysComponent
     {
@@ -39,7 +35,7 @@ namespace Simulator.Interfaces
         double Delay { get;}
         double CurrentDelay { get; }
         //Returns the output possible for the component
-        double Setpoint(double value,bool isQuery);
+        double Setpoint(double value);
     }
 
     interface IRenewable : ISysComponent
@@ -61,14 +57,14 @@ namespace Simulator.Interfaces
         //Double CRate { get; }
         Double MaxRate { get; }
         //Returns the output possible for the component
-        double Setpoint(double value, bool isQuery);
+        double Setpoint(double value);
     }
     public interface INewStorage
     {
         String Testing { get; set; }
     }
 
-    interface INewInheritedStorage :INewStorage
+    public interface INewInheritedStorage :INewStorage
     {
         String TestingInherited { get; set; }
     }

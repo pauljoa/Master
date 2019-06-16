@@ -37,13 +37,13 @@ namespace Simulator.Algorithms
                     if(comp is IStorage storage)
                     {
                         var setpoint = Math.Min(Math.Min(storage.MaxRate, demand),restDemand);
-                        var retval = storage.Setpoint(setpoint,false);
+                        var retval = storage.Setpoint(setpoint);
                         restDemand = restDemand - retval;
                     }
                     else if(comp is IProducer producer)
                     {
                         var setpoint = Math.Min(Math.Min(producer.MaxOutput, demand), restDemand);
-                        var retval = producer.Setpoint(setpoint, false);
+                        var retval = producer.Setpoint(setpoint);
                         restDemand = restDemand - retval;
                     }
                 }

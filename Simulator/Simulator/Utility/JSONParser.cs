@@ -8,14 +8,18 @@ using Simulator.Implementations;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Linq;
 using System.Runtime.Serialization;
+using System.Reflection;
+using System.IO;
 
 namespace Simulator.Utility
 {
     static class JSONParser
     {
+        public static Dictionary<String, Type> KnownInterfaces = new Dictionary<String, Type>();
         public static IDictionary<Guid,ISysComponent> ParseConfig(String jsonString)
         {
             Dictionary<Guid, ISysComponent> result = new Dictionary<Guid, ISysComponent>();
+            GetInterfacesFromRepository(@"C:\Users\PaulJoakim\Source\Repos\Master\InterfaceRepository");
             dynamic jsonObject = JValue.Parse(jsonString);
             foreach(JObject j in jsonObject as JArray)
             {
@@ -28,38 +32,19 @@ namespace Simulator.Utility
                 }
                 //Dynamic interface implementation
 
-
+                if(!KnownInterfaces.TryGetValue(model.Interface,out Type Interface))
+                {
+                    //Do error handling
+                    continue;
+                }
                 //Generic implementation of ISysComponent
                 component = new SysComponent(model.Id, model.Name);
-                var newType = DRII<ISysComponent>.DynamicInterfaceImplementation(typeof(IStorage),(SysComponent) component);
                 component.LoadComponent(model.Type, model.Path, model.Data);
-                //DRII<ISysComponent>.Implement<INewStorage>(component);
-                result.Add(component.Id, component);
-                //switch (model.Type)
-                //{
-                //    case "Battery":
-                //        component = new Battery(model.Id, model.Name);
-                //        component.LoadComponent(model.Type, model.Path, model.Data);
-                //        result.Add(component.Id, component);
-                //        break;
-                //    case "ICE":
-                //        component = new ICE(model.Id, model.Name);
-                //        component.LoadComponent(model.Type, model.Path, model.Data);
-                //        result.Add(component.Id, component);
-                //        break;
-                //    case "PV":
-                //        component = new PV(model.Id, model.Name);
-                //        component.LoadComponent(model.Type, model.Path, model.Data);
-                //        result.Add(component.Id, component);
-                //        break;
-                //    default:
-                //        //Generic implementation of ISysComponent
-                //        component = new SysComponent(model.Id, model.Name);
-                //        component.LoadComponent(model.Type, model.Path, model.Data);
-                //        TypeMixer<ISysComponent>.ExtendWith<IStorage>(component);
-                //        result.Add(component.Id, component);
-                //        break;
-                //}
+                var newType = DRII.DynamicInterfaceImplementation(Interface, (SysComponent) component);
+                if(newType is SysComponent comp)
+                {
+                    result.Add(comp.Id, comp);
+                }
             }
             return result;
         }
@@ -72,20 +57,53 @@ namespace Simulator.Utility
             }
             return true;
         }
+
+        private static void GetInterfacesFromRepository(string path)
+        {
+            DirectoryInfo dir = new DirectoryInfo(@"" + path);
+            FileInfo[] Files = dir.GetFiles("*.dll");
+
+
+            foreach (var file in Files)
+            {
+                var Dll = Assembly.LoadFile(file.FullName);
+                try
+                {
+                    var typeList = Dll.GetTypes();
+                    foreach(var type in typeList)
+                    {
+                        KnownInterfaces.Add(type.FullName, type);
+                    }
+                }
+                catch (Exception e)
+                {
+                    throw e;
+                } 
+            }
+
+
+        }
+
+
     }
+
+
+    
     class ModelConfig
     {
         //For visualization purposes
-        public string Name;
+        public string Name { get; set; }
         //For linking and hierarchy building
-        public Guid Id;
+        public Guid Id { get; set; }
         //Namespace unique for identifying the model in the loaded .dll
         //Possibility of namespace exploration in later versions
-        public string Type;
+        public string Type { get; set; }
+        //Namespace unique specific interface from interface repository
+        public string Interface { get; set; }
         //Path to the wrapper/.dll
-        public string Path;
+        public string Path { get; set; }
         //Type specific data
-        public dynamic Data;
+        public dynamic Data { get; set; }
     }
 
     class ModelConfigException : Exception

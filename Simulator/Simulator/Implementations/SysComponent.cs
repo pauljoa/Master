@@ -51,7 +51,7 @@ namespace Simulator.Implementations
                     catch (Exception e)
                     {
 
-                        throw;
+                        throw e;
                     }
 
                     parameters.Add(value);

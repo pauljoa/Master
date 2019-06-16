@@ -92,5 +92,10 @@ namespace Simulator.Implementations
                 return retval;
             }
         }
+
+        public double Setpoint(double value)
+        {
+            throw new NotImplementedException();
+        }
     }
 }
