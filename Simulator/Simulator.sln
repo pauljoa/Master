@@ -5,7 +5,11 @@ VisualStudioVersion = 15.0.27428.2005
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Simulator", "Simulator\Simulator.csproj", "{5A62F9EE-F558-43A8-996A-33DD440E5DD7}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Interfaces", "Interfaces\Interfaces.csproj", "{C8BB0BBB-9528-465B-8C08-E2C56EC599EC}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Interfaces", "Interfaces\Interfaces.csproj", "{C8BB0BBB-9528-465B-8C08-E2C56EC599EC}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SharedInterfaces", "SharedInterfaces\SharedInterfaces.csproj", "{4ED2C207-E9C6-4BB9-9C7A-B3941C11107D}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Algorithms", "Algorithms\Algorithms.csproj", "{BB187904-8230-483B-8C8A-8D1FC5F7EC7D}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -21,6 +25,14 @@ Global
 		{C8BB0BBB-9528-465B-8C08-E2C56EC599EC}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{C8BB0BBB-9528-465B-8C08-E2C56EC599EC}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{C8BB0BBB-9528-465B-8C08-E2C56EC599EC}.Release|Any CPU.Build.0 = Release|Any CPU
+		{4ED2C207-E9C6-4BB9-9C7A-B3941C11107D}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{4ED2C207-E9C6-4BB9-9C7A-B3941C11107D}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{4ED2C207-E9C6-4BB9-9C7A-B3941C11107D}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{4ED2C207-E9C6-4BB9-9C7A-B3941C11107D}.Release|Any CPU.Build.0 = Release|Any CPU
+		{BB187904-8230-483B-8C8A-8D1FC5F7EC7D}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{BB187904-8230-483B-8C8A-8D1FC5F7EC7D}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{BB187904-8230-483B-8C8A-8D1FC5F7EC7D}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{BB187904-8230-483B-8C8A-8D1FC5F7EC7D}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

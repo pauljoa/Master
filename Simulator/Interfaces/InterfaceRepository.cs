@@ -7,7 +7,7 @@ namespace Interfaces
 
     public interface IProducer
     {
-        IConverter Converter { get; set; }
+        //IConverter Converter { get; set; }
         //IList<Tuple<double,double>> Steps { get; set; }
         double MaxOutput { get; }
         double CurrentOutput { get; }
@@ -19,7 +19,7 @@ namespace Interfaces
 
     public interface IRenewable
     {
-        IConverter Converter { get; set; }
+        //IConverter Converter { get; set; }
         IList<double> Outputs { get; set; }
         double MaxOutput { get; }
         double CurrentOutput { get; }

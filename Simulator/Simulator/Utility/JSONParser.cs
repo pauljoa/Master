@@ -10,6 +10,7 @@ using Newtonsoft.Json.Linq;
 using System.Runtime.Serialization;
 using System.Reflection;
 using System.IO;
+using SharedInterfaces;
 
 namespace Simulator.Utility
 {
@@ -40,8 +41,11 @@ namespace Simulator.Utility
                 //Generic implementation of ISysComponent
                 component = new SysComponent(model.Id, model.Name);
                 component.LoadComponent(model.Type, model.Path, model.Data);
+                
                 var newType = DRII.DynamicInterfaceImplementation(Interface, (SysComponent) component);
-                if(newType is SysComponent comp)
+                dynamic test = newType;
+                test.Setpoint(20000);
+                if (newType is ISysComponent comp)
                 {
                     result.Add(comp.Id, comp);
                 }
@@ -66,7 +70,8 @@ namespace Simulator.Utility
 
             foreach (var file in Files)
             {
-                var Dll = Assembly.LoadFile(file.FullName);
+                var Dll = Assembly.LoadFrom(file.FullName);
+
                 try
                 {
                     var typeList = Dll.GetTypes();
@@ -80,8 +85,6 @@ namespace Simulator.Utility
                     throw e;
                 } 
             }
-
-
         }
 
 

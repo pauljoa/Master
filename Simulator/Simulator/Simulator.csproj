@@ -55,18 +55,15 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="Algorithms\SimpleAlgorithm.cs" />
     <Compile Include="Controller.cs" />
-    <Compile Include="Implementations\Battery.cs" />
-    <Compile Include="Implementations\ICE.cs" />
     <Compile Include="Implementations\SysComponent.cs" />
     <Compile Include="Interfaces\Interfaces.cs" />
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="Utility\AlgorithmLoader.cs" />
     <Compile Include="Utility\CSVParser.cs" />
     <Compile Include="Utility\DllLoader.cs" />
     <Compile Include="Utility\JSONParser.cs" />
-    <Compile Include="Implementations\PV.cs" />
     <Compile Include="Utility\Syntheziser.cs" />
     <Compile Include="Utility\DRII.cs" />
   </ItemGroup>
@@ -75,6 +72,11 @@
     <None Include="Class Diagrams\ClassDiagram1.cd" />
     <None Include="packages.config" />
   </ItemGroup>
-  <ItemGroup />
+  <ItemGroup>
+    <ProjectReference Include="..\SharedInterfaces\SharedInterfaces.csproj">
+      <Project>{4ED2C207-E9C6-4BB9-9C7A-B3941C11107D}</Project>
+      <Name>SharedInterfaces</Name>
+    </ProjectReference>
+  </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
 </Project>

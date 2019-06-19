@@ -9,6 +9,7 @@ using System.Threading.Tasks;
 using Newtonsoft.Json;
 using System.Dynamic;
 using System.Reflection;
+using SharedInterfaces;
 
 namespace Simulator
 {
@@ -17,12 +18,12 @@ namespace Simulator
         public static IDictionary<Guid, List<Snapshot>> Snapshots = new Dictionary<Guid, List<Snapshot>>();
         static void Main(string[] args)
         {
-            
+            IAlgorithm algo = AlgorithmLoader.Load("SimpleAlgorithm", @"C:\Users\PaulJoakim\Source\Repos\Master\AlgorithmRepository");
             //Sample configuration parsing
             String JsonString = System.IO.File.ReadAllText(@"C:\Users\PaulJoakim\source\repos\Master\DllLoadTest\Debug\config.txt");
             IDictionary<Guid, ISysComponent> components = JSONParser.ParseConfig(JsonString);
             List<CSVFormat> demand = CSVParser.Parse("C:\\Users\\PaulJoakim\\source\\repos\\Master\\Simulator\\Simulator\\Data\\demand.csv").ToList();
-            IAlgorithm algo = new Algorithms.SimpleAlgorithm(components);
+           
             int time = 0;
             
             foreach(var d in demand)
