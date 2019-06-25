@@ -3,8 +3,6 @@ using System.Collections.Generic;
 
 namespace Interfaces
 {
-
-
     public interface IProducer
     {
         //IConverter Converter { get; set; }
@@ -16,7 +14,6 @@ namespace Interfaces
         //Returns the output possible for the component
         double Setpoint(double value);
     }
-
     public interface IRenewable
     {
         //IConverter Converter { get; set; }
@@ -24,8 +21,6 @@ namespace Interfaces
         double MaxOutput { get; }
         double CurrentOutput { get; }
     }
-
-
     public interface IStorage
     {
         Double Capacity { get; }

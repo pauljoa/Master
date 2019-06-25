@@ -43,8 +43,6 @@ namespace Simulator.Utility
                 component.LoadComponent(model.Type, model.Path, model.Data);
                 
                 var newType = DRII.DynamicInterfaceImplementation(Interface, (SysComponent) component);
-                dynamic test = newType;
-                test.Setpoint(20000);
                 if (newType is ISysComponent comp)
                 {
                     result.Add(comp.Id, comp);

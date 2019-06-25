@@ -30,13 +30,16 @@ namespace Simulator.Utility
         {
             
             Type newType = null;
-            //If implementation already exist
+            //Try to retrieve earlier implementation of the specified interface
             if (Implementations.TryGetValue(Interface, out newType))
             {
+                //Retrieve constructor parameters to be used in the new type instance
                 if(Parameters.TryGetValue(newType,out List<TypeHelper> parameters))
                 {
 
                 }
+                //Instantiate the new type, using the results from GenerateParameters with the found constructor
+                //GenerateParameters returns a List of delegates, used to bind methods to the model.
                 var instance = Activator.CreateInstance(newType, GenerateParameters(parameters, source, ref newType).ToArray());
                 if (source == null)
                 {
@@ -162,13 +165,18 @@ namespace Simulator.Utility
 
                 FieldBuilder field = type.DefineField("_" + v.Name.ToLower(), v.PropertyType, FieldAttributes.Private);
                 PropertyBuilder property = type.DefineProperty(v.Name, PropertyAttributes.None, v.PropertyType, new Type[0]);
+
+                //If Getter is specified in interface definition
                 if (v.GetGetMethod() != null)
                 {
+
+
+
+
                     Type del = GenerateDelegate(v.GetGetMethod());
                     paramTypes.Add(new TypeHelper(del, "get_"+v.Name));
                     ctr.DefineParameter(index + 1, ParameterAttributes.None, "get_" + v.Name);
                     var delegateField = type.DefineField("del_" + v.Name, del, FieldAttributes.Private);
-
                     ctrGenerator.Emit(OpCodes.Ldarg_0);
                     ctrGenerator.Emit(OpCodes.Ldarg_S, index + 1);
                     ctrGenerator.Emit(OpCodes.Stfld, delegateField);
@@ -193,6 +201,7 @@ namespace Simulator.Utility
 
 
                 }
+                //If setter is specified in interface definition
                 if (v.GetSetMethod() != null)
                 {
                     MethodBuilder setter = type.DefineMethod("set_" + v.Name, MethodAttributes.Public | MethodAttributes.SpecialName | MethodAttributes.Virtual, null, new Type[] { v.PropertyType });
@@ -250,64 +259,78 @@ namespace Simulator.Utility
             }
         }
         #region DelegateGenerator
+        /// <summary>
+        /// Generic Delegate generator
+        /// Generates a delegate based on the method info
+        /// </summary>
+        /// <param name="info">Information on the method requiring a delegate</param>
+        /// <returns>Delegate Type</returns>
         private static Type GenerateDelegate(MethodInfo info)
         {
             var parameters = info.GetParameters().Select(o => o.ParameterType).ToArray();
             if(info.ReturnType == typeof(void))
             {
-                switch(parameters.Length)
-                {
-                    case 0:
-                        return typeof(Action);
-                    case 1:
-                        return typeof(Action<>).MakeGenericType(parameters);
-                    case 2:
-                        return typeof(Action<,>).MakeGenericType(parameters);
-                    case 3:
-                        return typeof(Action<,,>).MakeGenericType(parameters);
-                    case 4:
-                        return typeof(Action<,,,>).MakeGenericType(parameters);
-                    case 5:
-                        return typeof(Action<,,,,>).MakeGenericType(parameters);
-                    case 6:
-                        return typeof(Action<,,,,,>).MakeGenericType(parameters);
-                    case 7:
-                        return typeof(Action<,,,,,,>).MakeGenericType(parameters);
-                    case 8:
-                        return typeof(Action<,,,,,,,>).MakeGenericType(parameters);
-                    case 9:
-                        return typeof(Action<,,,,,,,,>).MakeGenericType(parameters);
-                    default:
-                        return null;
-                }
+                return Expression.GetActionType(parameters);
+
+                #region Old Generic Delegate Generator
+                //switch(parameters.Length)
+                //{
+                //    case 0:
+                //        return typeof(Action);
+                //    case 1:
+                //        return typeof(Action<>).MakeGenericType(parameters);
+                //    case 2:
+                //        return typeof(Action<,>).MakeGenericType(parameters);
+                //    case 3:
+                //        return typeof(Action<,,>).MakeGenericType(parameters);
+                //    case 4:
+                //        return typeof(Action<,,,>).MakeGenericType(parameters);
+                //    case 5:
+                //        return typeof(Action<,,,,>).MakeGenericType(parameters);
+                //    case 6:
+                //        return typeof(Action<,,,,,>).MakeGenericType(parameters);
+                //    case 7:
+                //        return typeof(Action<,,,,,,>).MakeGenericType(parameters);
+                //    case 8:
+                //        return typeof(Action<,,,,,,,>).MakeGenericType(parameters);
+                //    case 9:
+                //        return typeof(Action<,,,,,,,,>).MakeGenericType(parameters);
+                //    default:
+                //        return null;
+                //}
+                #endregion
             }
             else
             {
-                switch (parameters.Length)
-                {
-                    case 0:
-                        return typeof(Func<>).MakeGenericType(parameters.Concat(new[] { info.ReturnType }).ToArray());
-                    case 1:
-                        return typeof(Func<,>).MakeGenericType(parameters.Concat(new[] { info.ReturnType }).ToArray());
-                    case 2:
-                        return typeof(Func<,,>).MakeGenericType(parameters.Concat(new[] { info.ReturnType }).ToArray());
-                    case 3:
-                        return typeof(Func<,,,>).MakeGenericType(parameters.Concat(new[] { info.ReturnType }).ToArray());
-                    case 4:
-                        return typeof(Func<,,,,>).MakeGenericType(parameters.Concat(new[] { info.ReturnType }).ToArray());
-                    case 5:
-                        return typeof(Func<,,,,,>).MakeGenericType(parameters.Concat(new[] { info.ReturnType }).ToArray());
-                    case 6:
-                        return typeof(Func<,,,,,,>).MakeGenericType(parameters.Concat(new[] { info.ReturnType }).ToArray());
-                    case 7:
-                        return typeof(Func<,,,,,,,>).MakeGenericType(parameters.Concat(new[] { info.ReturnType }).ToArray());
-                    case 8:
-                        return typeof(Func<,,,,,,,,>).MakeGenericType(parameters.Concat(new[] { info.ReturnType }).ToArray());
-                    case 9:
-                        return typeof(Func<,,,,,,,,,>).MakeGenericType(parameters.Concat(new[] { info.ReturnType }).ToArray());
-                    default:
-                        return null;
-                }
+                return Expression.GetFuncType(parameters.Concat(new[] { info.ReturnType }).ToArray());
+                
+                #region Old Generic Delegate Generator
+                //switch (parameters.Length)
+                //{
+                //    case 0:
+                //        return typeof(Func<>).MakeGenericType(parameters.Concat(new[] { info.ReturnType }).ToArray());
+                //    case 1:
+                //        return typeof(Func<,>).MakeGenericType(parameters.Concat(new[] { info.ReturnType }).ToArray());
+                //    case 2:
+                //        return typeof(Func<,,>).MakeGenericType(parameters.Concat(new[] { info.ReturnType }).ToArray());
+                //    case 3:
+                //        return typeof(Func<,,,>).MakeGenericType(parameters.Concat(new[] { info.ReturnType }).ToArray());
+                //    case 4:
+                //        return typeof(Func<,,,,>).MakeGenericType(parameters.Concat(new[] { info.ReturnType }).ToArray());
+                //    case 5:
+                //        return typeof(Func<,,,,,>).MakeGenericType(parameters.Concat(new[] { info.ReturnType }).ToArray());
+                //    case 6:
+                //        return typeof(Func<,,,,,,>).MakeGenericType(parameters.Concat(new[] { info.ReturnType }).ToArray());
+                //    case 7:
+                //        return typeof(Func<,,,,,,,>).MakeGenericType(parameters.Concat(new[] { info.ReturnType }).ToArray());
+                //    case 8:
+                //        return typeof(Func<,,,,,,,,>).MakeGenericType(parameters.Concat(new[] { info.ReturnType }).ToArray());
+                //    case 9:
+                //        return typeof(Func<,,,,,,,,,>).MakeGenericType(parameters.Concat(new[] { info.ReturnType }).ToArray());
+                //    default:
+                //        return null;
+                //}
+                #endregion
             }
 
 
@@ -316,16 +339,28 @@ namespace Simulator.Utility
 
         }
         #endregion
+        /// <summary>
+        /// Generates a list of generically generated delegates, to be used in the constructor for instancing
+        /// the dynamically generated type
+        /// </summary>
+        /// <param name="delegates">List of previously specified delegates</param>
+        /// <param name="source">The source containing the model instance</param>
+        /// <param name="newType">Referance for the dynamically generated type</param>
+        /// <returns></returns>
         private static List<dynamic> GenerateParameters(List<TypeHelper> delegates,SysComponent source,ref Type newType)
         {
             List<dynamic> ctrList = new List<dynamic>();
             foreach(var d in delegates)
             {
-                var del = d.Del;
+                //Name of the method
                 var name = d.MethodName;
+                //Method reference in the new type
                 var method = newType.GetMethod(name);
+                //Parameters of newType method
                 var methodParameters = method.GetParameters();
+                //Found method in the model instance
                 MethodInfo InstanceMethod = source.Instance.GetType().GetMethod(name);
+
                 if (InstanceMethod == null)
                 {
                     if (name.StartsWith("get_".ToLower()))
@@ -361,11 +396,23 @@ namespace Simulator.Utility
             return ctrList;
         }
         //TODO: Implement method discovery function
+        /// <summary>
+        /// NOT IMPLEMENTED: Method for more flexibility in linking delegates with proxy methods
+        /// </summary>
+        /// <param name="mType">Type of instance containing methods</param>
+        /// <param name="d">Contains information regarding the method parameters, return values and method name</param>
+        /// <returns></returns>
         private static MethodInfo MethodDiscovery(Type mType, TypeHelper d)
         {
             throw new NotImplementedException();
         }
-
+        /// <summary>
+        /// Merge the source property values with the new type instance
+        /// </summary>
+        /// <typeparam name="K"> Type of the new type</typeparam>
+        /// <param name="source">The source instance to be copied from</param>
+        /// <param name="destination">The new type instance</param>
+        /// <returns></returns>
         private static K CopyValues<K>(SysComponent source, K destination)
         {
             foreach (PropertyInfo property in source.GetType().GetProperties(visibilityFlags))
@@ -377,21 +424,10 @@ namespace Simulator.Utility
 
             return destination;
         }
-        private static T BindToInstance<T>(Type Interface,T dest)
-        {
-            dynamic destProxy = dest;
-            foreach(var property in Interface.GetProperties(visibilityFlags))
-            {
-                var prop = dest.GetType().GetProperty(property.Name, visibilityFlags);
-                if(prop != null && prop.CanWrite)
-                {
-                    prop.SetValue(dest, property.GetValue(destProxy.Instance.GetType().GetProperty(prop.Name).GetValue(destProxy)));
-                }
-            }
-            return dest;
-        }
     }
-
+    /// <summary>
+    /// Helper class for structuring of delegate generation
+    /// </summary>
     public class TypeHelper
     {
         public TypeHelper(Type del, string methodName)
@@ -400,7 +436,14 @@ namespace Simulator.Utility
             MethodName = methodName;
         }
 
+        /// <summary>
+        /// Generic delegate type, created dynamically depending on 
+        /// the discovered method parameters and return values
+        /// </summary>
         public Type Del { get; set; }
+        /// <summary>
+        /// Name of the method the delegate will be bound to
+        /// </summary>
         public string MethodName { get; set; }
 
     }
