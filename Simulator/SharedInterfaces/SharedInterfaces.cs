@@ -7,7 +7,7 @@ namespace SharedInterfaces
     {
         Guid Id { get; set; }
         string Name { get; set; }
-        bool LoadComponent(String type, String path, dynamic data);
+        bool LoadComponent(String type, dynamic data);
         IList<Tuple<double, double>> Steps { get; set; }
     }
     public interface IAlgorithm

@@ -169,10 +169,6 @@ namespace Simulator.Utility
                 //If Getter is specified in interface definition
                 if (v.GetGetMethod() != null)
                 {
-
-
-
-
                     Type del = GenerateDelegate(v.GetGetMethod());
                     paramTypes.Add(new TypeHelper(del, "get_"+v.Name));
                     ctr.DefineParameter(index + 1, ParameterAttributes.None, "get_" + v.Name);

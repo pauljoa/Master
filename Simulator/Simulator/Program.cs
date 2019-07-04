@@ -10,6 +10,7 @@ using Newtonsoft.Json;
 using System.Dynamic;
 using System.Reflection;
 using SharedInterfaces;
+using System.IO;
 
 namespace Simulator
 {
@@ -20,7 +21,7 @@ namespace Simulator
         {
             IAlgorithm algo = AlgorithmLoader.Load("SimpleAlgorithm", @"C:\Users\PaulJoakim\Source\Repos\Master\AlgorithmRepository");
             //Sample configuration parsing
-            String JsonString = System.IO.File.ReadAllText(@"C:\Users\PaulJoakim\source\repos\Master\DllLoadTest\Debug\config.txt");
+            String JsonString = File.ReadAllText(@"C:\Users\PaulJoakim\source\repos\Master\DllLoadTest\Debug\config.txt");
             IDictionary<Guid, ISysComponent> components = JSONParser.ParseConfig(JsonString);
             List<CSVFormat> demand = CSVParser.Parse("C:\\Users\\PaulJoakim\\source\\repos\\Master\\Simulator\\Simulator\\Data\\demand.csv").ToList();
            
@@ -30,43 +31,32 @@ namespace Simulator
             {
                 if (algo.CalculateSetpoints(components, d.Value) == -1)
                 {
-                    Console.WriteLine("Demand Not met");
+                    Console.WriteLine("Demand Not met, press any key to continue");
+                    Console.ReadKey();
                     break;
                 }
                 //TODO: Take Snapshot
                 time++;
                 TakeSnapshot(time, components);
             }
-            Console.WriteLine("Final SoC");
+            string path = Path.Combine(Environment.CurrentDirectory, "Output");
+            Directory.CreateDirectory(path);
+
+            foreach (var snap in Snapshots)
+            {
+                
+                using (StreamWriter file = File.CreateText(Path.Combine(path, String.Format("{0}_Snapshots", snap.Key.ToString()))))
+                {
+                    JsonSerializer serializer = new JsonSerializer();
+                    serializer.Serialize(file, snap.Value,typeof(List<Snapshot>));
+                } 
+            }
+            Console.WriteLine("States written to disk, press any key to exit");
+            Console.ReadKey();
+
         }
         public static void TakeSnapshot(int time,IDictionary<Guid,ISysComponent> components) 
         {
-            #region
-            //foreach (var c in components.Values)
-            //{
-            //    PropertyInfo[] properties = c.GetType().GetProperties();
-            //    var propertySnap = new ExpandoObject() as IDictionary<string, Object>;
-            //    foreach (var property in properties)
-            //    {
-            //        if (property.Name == "Id" || property.Name == "Name" || property.Name == "Steps" || property.Name == "Instance")
-            //        {
-            //            continue;
-            //        }
-            //        propertySnap.Add(property.Name, property.GetValue(c));
-            //    }
-            //    if (Snapshots.TryGetValue(c.Id, out List<Snapshot> snaps))
-            //    {
-            //        snaps.Add(new Snapshot(time, propertySnap));
-            //    }
-            //    else
-            //    {
-            //        Snapshot shot = new Snapshot(time, propertySnap);
-            //        List<Snapshot> snapshots = new List<Snapshot>();
-            //        snapshots.Add(shot);
-            //        Snapshots.Add(c.Id, snapshots);
-            //    }
-            //}
-            #endregion
             foreach (var c in components.Values)
             {
                 PropertyInfo[] properties = c.GetType().GetProperties();
@@ -115,7 +105,9 @@ namespace Simulator
     }
     public class Snapshot
     {
+        [JsonProperty("T")]
         int Timestamp { get; set; }
+        [JsonProperty("S")]
         dynamic Snap { get; set; }
 
         public Snapshot(int timestamp, dynamic snapShots)

@@ -17,10 +17,14 @@ namespace Simulator.Utility
     static class JSONParser
     {
         public static Dictionary<String, Type> KnownInterfaces = new Dictionary<String, Type>();
+
+        public static Dictionary<String, Type> KnownModels = new Dictionary<string, Type>();
+
         public static IDictionary<Guid,ISysComponent> ParseConfig(String jsonString)
         {
             Dictionary<Guid, ISysComponent> result = new Dictionary<Guid, ISysComponent>();
             GetInterfacesFromRepository(@"C:\Users\PaulJoakim\Source\Repos\Master\InterfaceRepository");
+            GetModelsFromRepository(@"C:\Users\PaulJoakim\Source\Repos\Master\ModelRepository");
             dynamic jsonObject = JValue.Parse(jsonString);
             foreach(JObject j in jsonObject as JArray)
             {
@@ -31,7 +35,7 @@ namespace Simulator.Utility
                     //Throw error?
                     continue;
                 }
-                //Dynamic interface implementation
+               
 
                 if(!KnownInterfaces.TryGetValue(model.Interface,out Type Interface))
                 {
@@ -40,8 +44,8 @@ namespace Simulator.Utility
                 }
                 //Generic implementation of ISysComponent
                 component = new SysComponent(model.Id, model.Name);
-                component.LoadComponent(model.Type, model.Path, model.Data);
-                
+                component.LoadComponent(model.Type, model.Data);
+                //Dynamic interface implementation
                 var newType = DRII.DynamicInterfaceImplementation(Interface, (SysComponent) component);
                 if (newType is ISysComponent comp)
                 {
@@ -49,6 +53,31 @@ namespace Simulator.Utility
                 }
             }
             return result;
+        }
+
+        private static void GetModelsFromRepository(string path)
+        {
+            DirectoryInfo dir = new DirectoryInfo(@"" + path);
+            FileInfo[] Files = dir.GetFiles("*.dll");
+
+
+            foreach (var file in Files)
+            {
+                var Dll = Assembly.LoadFrom(file.FullName);
+
+                try
+                {
+                    var typeList = Dll.GetTypes();
+                    foreach (var type in typeList)
+                    {
+                        KnownModels.Add(type.FullName, type);
+                    }
+                }
+                catch (Exception e)
+                {
+                    throw e;
+                }
+            }
         }
 
         private static bool VerifyModel(ModelConfig model)
@@ -92,18 +121,32 @@ namespace Simulator.Utility
     
     class ModelConfig
     {
-        //For visualization purposes
+        
+        /// <summary>
+        /// For visualization purposes
+        /// </summary>
         public string Name { get; set; }
-        //For linking and hierarchy building
+        /// <summary>
+        /// For linking and hierarchy building
+        /// </summary>
         public Guid Id { get; set; }
-        //Namespace unique for identifying the model in the loaded .dll
-        //Possibility of namespace exploration in later versions
+        /// <summary>
+        /// Namespace unique for identifying the model in the loaded .dll
+        /// Possibility of namespace exploration in later versions
+        /// </summary>
         public string Type { get; set; }
-        //Namespace unique specific interface from interface repository
+        /// <summary>
+        /// Namespace unique specific interface from interface repository
+        /// </summary>
         public string Interface { get; set; }
-        //Path to the wrapper/.dll
+        /// <summary>
+        /// DEPRECATED, Use repository instead.
+        /// Contains the path to the specified model assembly
+        /// </summary>
         public string Path { get; set; }
-        //Type specific data
+        /// <summary>
+        /// Model parameters, Defined by the model constructor
+        /// </summary>
         public dynamic Data { get; set; }
     }
 

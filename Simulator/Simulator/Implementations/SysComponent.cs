@@ -12,9 +12,6 @@ namespace Simulator.Implementations
 {
     public class SysComponent : ISysComponent
     {
-        private Guid _Id;
-        private string _Name;
-
         public SysComponent()
         {
         }
@@ -28,18 +25,21 @@ namespace Simulator.Implementations
         public dynamic Instance { get; set; }
         public IList<Tuple<double, double>> Steps { get; set; }
 
-        public Guid Id { get => _Id; set => _Id = value; }
-        public string Name { get => _Name; set => _Name = value; }
+        public Guid Id { get; set; }
+        public string Name { get; set; }
 
-        public bool LoadComponent(string type, string path, dynamic data)
+        public bool LoadComponent(string type, dynamic data)
         {
-            var Dll = Assembly.LoadFile(@"" + path);
             try
             {
                 //Generic Instantiator
-                var list = Dll.GetExportedTypes();
-                var typeList = list.Where(o => o.Name.Equals(type));
-                var parameterInfo = typeList.First().GetConstructors().First().GetParameters();
+                var typeList = JSONParser.KnownModels.TryGetValue(type,out Type model);
+                if(!typeList)
+                {
+                    //Error
+                    return false;
+                }
+                var parameterInfo = model.GetConstructors().First().GetParameters();
                 List<object> parameters = new List<object>();
                 foreach (var info in parameterInfo)
                 {
@@ -57,7 +57,7 @@ namespace Simulator.Implementations
 
                     parameters.Add(value);
                 }
-                Instance = Activator.CreateInstance(typeList.First(), parameters.ToArray());
+                Instance = Activator.CreateInstance(model, parameters.ToArray());
                 return true;
             }
             catch (Exception e)
