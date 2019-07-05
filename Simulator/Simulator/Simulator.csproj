@@ -61,6 +61,7 @@
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Utility\AlgorithmLoader.cs" />
+    <Compile Include="Utility\Caches.cs" />
     <Compile Include="Utility\CSVParser.cs" />
     <Compile Include="Utility\DllLoader.cs" />
     <Compile Include="Utility\JSONParser.cs" />

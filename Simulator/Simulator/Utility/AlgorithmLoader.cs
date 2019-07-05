@@ -12,32 +12,24 @@ namespace Simulator.Utility
     public static class AlgorithmLoader
     {
 
-        public static IAlgorithm Load(string name,string path)
+        public static IAlgorithm Load(string name)
         {
-            DirectoryInfo dir = new DirectoryInfo(@"" + path);
-            FileInfo[] Files = dir.GetFiles("*.dll");
-
-            foreach (var file in Files)
+            if(Caches.Algorithms.TryGetValue(name.ToLower(),out Type algo))
             {
-                var Dll = Assembly.LoadFrom(file.FullName);
                 try
                 {
-                    var typeList = Dll.GetTypes();
-                    foreach (var type in typeList)
+                    var alg = Activator.CreateInstance(algo);
+                    if (alg is IAlgorithm algorithm)
                     {
-                        if(type.Name.ToLower() == name.ToLower())
-                        {
-                            var algorithm = Activator.CreateInstance(type);
-                            if(algorithm is IAlgorithm algo)
-                            {
-                                return algo;
-                            }
-                        }
+                        return algorithm;
+                    }
+                    else
+                    {
+                        return null;
                     }
                 }
                 catch (Exception e)
                 {
-                    
                     throw e;
                 }
             }

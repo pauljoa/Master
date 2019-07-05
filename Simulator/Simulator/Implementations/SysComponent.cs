@@ -33,7 +33,7 @@ namespace Simulator.Implementations
             try
             {
                 //Generic Instantiator
-                var typeList = JSONParser.KnownModels.TryGetValue(type,out Type model);
+                var typeList = Caches.Models.TryGetValue(type.ToLower(),out Type model);
                 if(!typeList)
                 {
                     //Error

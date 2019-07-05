@@ -16,15 +16,10 @@ namespace Simulator.Utility
 {
     static class JSONParser
     {
-        public static Dictionary<String, Type> KnownInterfaces = new Dictionary<String, Type>();
-
-        public static Dictionary<String, Type> KnownModels = new Dictionary<string, Type>();
 
         public static IDictionary<Guid,ISysComponent> ParseConfig(String jsonString)
         {
             Dictionary<Guid, ISysComponent> result = new Dictionary<Guid, ISysComponent>();
-            GetInterfacesFromRepository(@"C:\Users\PaulJoakim\Source\Repos\Master\InterfaceRepository");
-            GetModelsFromRepository(@"C:\Users\PaulJoakim\Source\Repos\Master\ModelRepository");
             dynamic jsonObject = JValue.Parse(jsonString);
             foreach(JObject j in jsonObject as JArray)
             {
@@ -37,7 +32,7 @@ namespace Simulator.Utility
                 }
                
 
-                if(!KnownInterfaces.TryGetValue(model.Interface,out Type Interface))
+                if(!Caches.Interfaces.TryGetValue(model.Interface.ToLower(),out Type Interface))
                 {
                     //Do error handling
                     continue;
@@ -55,31 +50,6 @@ namespace Simulator.Utility
             return result;
         }
 
-        private static void GetModelsFromRepository(string path)
-        {
-            DirectoryInfo dir = new DirectoryInfo(@"" + path);
-            FileInfo[] Files = dir.GetFiles("*.dll");
-
-
-            foreach (var file in Files)
-            {
-                var Dll = Assembly.LoadFrom(file.FullName);
-
-                try
-                {
-                    var typeList = Dll.GetTypes();
-                    foreach (var type in typeList)
-                    {
-                        KnownModels.Add(type.FullName, type);
-                    }
-                }
-                catch (Exception e)
-                {
-                    throw e;
-                }
-            }
-        }
-
         private static bool VerifyModel(ModelConfig model)
         {
             if(model.Name == "" || model.Id == null || model.Id == Guid.Empty || model.Type == "" || model.Type == "")
@@ -89,30 +59,6 @@ namespace Simulator.Utility
             return true;
         }
 
-        private static void GetInterfacesFromRepository(string path)
-        {
-            DirectoryInfo dir = new DirectoryInfo(@"" + path);
-            FileInfo[] Files = dir.GetFiles("*.dll");
-
-
-            foreach (var file in Files)
-            {
-                var Dll = Assembly.LoadFrom(file.FullName);
-
-                try
-                {
-                    var typeList = Dll.GetTypes();
-                    foreach(var type in typeList)
-                    {
-                        KnownInterfaces.Add(type.FullName, type);
-                    }
-                }
-                catch (Exception e)
-                {
-                    throw e;
-                } 
-            }
-        }
 
 
     }

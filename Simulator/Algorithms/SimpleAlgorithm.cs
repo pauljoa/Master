@@ -6,7 +6,7 @@ using System.Linq;
 
 namespace Algorithms
 {
-    class SimpleAlgorithm : IAlgorithm
+    public class SimpleAlgorithm : IAlgorithm
     {
 
         public SimpleAlgorithm()

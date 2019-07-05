@@ -19,7 +19,8 @@ namespace Simulator
         public static IDictionary<Guid, List<Snapshot>> Snapshots = new Dictionary<Guid, List<Snapshot>>();
         static void Main(string[] args)
         {
-            IAlgorithm algo = AlgorithmLoader.Load("SimpleAlgorithm", @"C:\Users\PaulJoakim\Source\Repos\Master\AlgorithmRepository");
+            Caches.Initialize();
+            IAlgorithm algo = AlgorithmLoader.Load("Algorithms.SimpleAlgorithm");
             //Sample configuration parsing
             String JsonString = File.ReadAllText(@"C:\Users\PaulJoakim\source\repos\Master\DllLoadTest\Debug\config.txt");
             IDictionary<Guid, ISysComponent> components = JSONParser.ParseConfig(JsonString);
@@ -45,7 +46,7 @@ namespace Simulator
             foreach (var snap in Snapshots)
             {
                 
-                using (StreamWriter file = File.CreateText(Path.Combine(path, String.Format("{0}_Snapshots", snap.Key.ToString()))))
+                using (StreamWriter file = File.CreateText(Path.Combine(path, String.Format("{0}_Snapshots.txt", snap.Key.ToString()))))
                 {
                     JsonSerializer serializer = new JsonSerializer();
                     serializer.Serialize(file, snap.Value,typeof(List<Snapshot>));
@@ -102,6 +103,7 @@ namespace Simulator
                 }
             }
         }
+
     }
     public class Snapshot
     {
