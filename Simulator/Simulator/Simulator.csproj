@@ -55,15 +55,12 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="Controller.cs" />
     <Compile Include="Implementations\SysComponent.cs" />
-    <Compile Include="Interfaces\Interfaces.cs" />
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Utility\AlgorithmLoader.cs" />
     <Compile Include="Utility\Caches.cs" />
     <Compile Include="Utility\CSVParser.cs" />
-    <Compile Include="Utility\DllLoader.cs" />
     <Compile Include="Utility\JSONParser.cs" />
     <Compile Include="Utility\Syntheziser.cs" />
     <Compile Include="Utility\DRII.cs" />
@@ -71,6 +68,7 @@
   <ItemGroup>
     <None Include="App.config" />
     <None Include="Class Diagrams\ClassDiagram1.cd" />
+    <None Include="ClassDiagram1.cd" />
     <None Include="packages.config" />
   </ItemGroup>
   <ItemGroup>

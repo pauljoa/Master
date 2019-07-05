@@ -1,5 +1,4 @@
-﻿using Simulator.Interfaces;
-using Simulator.Utility;
+﻿using Simulator.Utility;
 using Simulator.Implementations;
 using System;
 using System.Collections.Generic;
