@@ -1,0 +1,55 @@
+ImageRuntimeVersion: v4.0.30319
+Assembly Wrapper, Version=1.0.*, Culture=Invariant Language (Invariant Country): 
+	hash=SHA1, flags=PublicKey
+Assembly mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089: 
+	hash=None, flags=None
+Assembly System.Data, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089: 
+	hash=None, flags=None
+Assembly System, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089: 
+	hash=None, flags=None
+Assembly System.Xml, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089: 
+	hash=None, flags=None
+Class CLI.ManagedObject<BattDll::Battery>: AutoLayout, AnsiClass, Class, Public, BeforeFieldInit
+    Void .ctor(BattDll.Battery*): PrivateScope, Public, HideBySig, SpecialName, RTSpecialName
+  Interfaces:
+    System.IDisposable
+  Methods:
+    Dispose(): PrivateScope, Public, Final, Virtual, HideBySig
+Class CLI.Battery: AutoLayout, AnsiClass, Class, Public, BeforeFieldInit
+  :CLI.ManagedObject<BattDll::Battery>
+    Void .ctor(Double, Double, Double, Double, Double): PrivateScope, Public, HideBySig, SpecialName, RTSpecialName
+  Properties:
+    Double MaxRate 'get ' : 
+    Double CRate 'get ' : 
+    Double Current 'get ' : 
+    Double Voltage 'get ' : 
+    Double SoC 'get ' : 
+    Double Capacity 'get ' : 
+  Methods:
+    Setpoint(Double): PrivateScope, Public, HideBySig
+    get_Capacity(): PrivateScope, Public, HideBySig, SpecialName
+    get_SoC(): PrivateScope, Public, HideBySig, SpecialName
+    get_Voltage(): PrivateScope, Public, HideBySig, SpecialName
+    get_Current(): PrivateScope, Public, HideBySig, SpecialName
+    get_CRate(): PrivateScope, Public, HideBySig, SpecialName
+    get_MaxRate(): PrivateScope, Public, HideBySig, SpecialName
+Class CLI.ManagedObject<BattDll::ICE>: AutoLayout, AnsiClass, Class, Public, BeforeFieldInit
+    Void .ctor(BattDll.ICE*): PrivateScope, Public, HideBySig, SpecialName, RTSpecialName
+  Interfaces:
+    System.IDisposable
+  Methods:
+    Dispose(): PrivateScope, Public, Final, Virtual, HideBySig
+Class CLI.ICE: AutoLayout, AnsiClass, Class, Public, BeforeFieldInit
+  :CLI.ManagedObject<BattDll::ICE>
+    Void .ctor(Double, Double): PrivateScope, Public, HideBySig, SpecialName, RTSpecialName
+  Properties:
+    Double CurrentDelay 'get ' : 
+    Double Delay 'get ' : 
+    Double CurrentOutput 'get ' : 
+    Double MaxOutput 'get ' : 
+  Methods:
+    Setpoint(Double): PrivateScope, Public, HideBySig
+    get_MaxOutput(): PrivateScope, Public, HideBySig, SpecialName
+    get_CurrentOutput(): PrivateScope, Public, HideBySig, SpecialName
+    get_Delay(): PrivateScope, Public, HideBySig, SpecialName
+    get_CurrentDelay(): PrivateScope, Public, HideBySig, SpecialName

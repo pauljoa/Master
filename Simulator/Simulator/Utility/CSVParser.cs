@@ -13,13 +13,22 @@ namespace Simulator.Utility
     {
         public static IList<CSVFormat> Parse(String filepath)
         {
-            using(var stream = new StreamReader(filepath))
+            try
             {
-                using(var reader = new CsvReader(stream))
+                using (var stream = new StreamReader(filepath))
                 {
-                    var records = reader.GetRecords<CSVFormat>();
-                    return records.ToList();
+                    using (var reader = new CsvReader(stream))
+                    {
+                        var records = reader.GetRecords<CSVFormat>();
+                        return records.ToList();
+                    }
                 }
+            }
+            catch (Exception e)
+            {
+
+                Console.WriteLine("Failed parsing of demand data");
+                return new List<CSVFormat>();
             }
         }
     }

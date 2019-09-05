@@ -23,9 +23,9 @@ namespace Simulator.Utility
             //GetInterfacesFromRepository(@"C:\Users\PaulJoakim\Source\Repos\Master\InterfaceRepository");
             //GetModelsFromRepository(@"C:\Users\PaulJoakim\Source\Repos\Master\ModelRepository");
             //Consolidated into one method
-            GetAssembliesFromRepository(@"C:\Users\PaulJoakim\Source\Repos\Master\AlgorithmRepository", CacheType.Algorithm);
-            GetAssembliesFromRepository(@"C:\Users\PaulJoakim\Source\Repos\Master\InterfaceRepository", CacheType.Interface);
-            GetAssembliesFromRepository(@"C:\Users\PaulJoakim\Source\Repos\Master\ModelRepository", CacheType.Model);
+            GetAssembliesFromRepository(@"C:\Users\paulj\source\repos\Master\Repositories\Algorithms", CacheType.Algorithm);
+            GetAssembliesFromRepository(@"C:\Users\paulj\source\repos\Master\Repositories\Interfaces", CacheType.Interface);
+            GetAssembliesFromRepository(@"C:\Users\paulj\source\repos\Master\Repositories\Models", CacheType.Model);
             
         }
 
@@ -33,7 +33,7 @@ namespace Simulator.Utility
         private static void GetModelsFromRepository(string path)
         {
             DirectoryInfo dir = new DirectoryInfo(@"" + path);
-            FileInfo[] Files = dir.GetFiles("*.dll");
+            FileInfo[] Files = dir.GetFiles(" *.dll");
 
 
             foreach (var file in Files)

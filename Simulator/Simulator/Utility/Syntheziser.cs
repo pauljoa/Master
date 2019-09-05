@@ -53,7 +53,7 @@ namespace Simulator.Utility
                     Debug.WriteLine("Time: {0} Power: {1}",i,Power);
                 }
             }
-            using (var writer = new StreamWriter("C:\\Users\\PaulJoakim\\source\\repos\\Master\\Simulator\\Simulator\\Data\\demand.csv"))
+            using (var writer = new StreamWriter(@"C:\Users\paulj\Source\Repos\Master\Repositories\Demand\demand.csv"))
             {
                 using (var csv = new CsvWriter(writer))
                 {

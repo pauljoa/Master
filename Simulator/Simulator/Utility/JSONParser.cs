@@ -10,6 +10,7 @@ using System.Runtime.Serialization;
 using System.Reflection;
 using System.IO;
 using SharedInterfaces;
+using System.ComponentModel;
 
 namespace Simulator.Utility
 {
@@ -88,6 +89,8 @@ namespace Simulator.Utility
         /// DEPRECATED, Use repository instead.
         /// Contains the path to the specified model assembly
         /// </summary>
+        [DefaultValue("")]
+        [JsonProperty(DefaultValueHandling = DefaultValueHandling.IgnoreAndPopulate)]
         public string Path { get; set; }
         /// <summary>
         /// Model parameters, Defined by the model constructor
