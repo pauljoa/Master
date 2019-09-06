@@ -1,0 +1,50 @@
+[{
+        "Name": "TestBattery1",
+        "Id": "0729f238-3628-4268-881f-813a60dbb774",
+        "Type": "CLI.Battery",
+        "Interface": "Interfaces.IStorage",
+        "Data": {
+            "Capacity": 200,
+            "SoC": 70,
+            "Voltage": 400,
+            "Current": 0,
+            "CRate": 0.9
+        }
+    },{
+        "Name": "TestBattery2",
+        "Id": "0729f238-3628-4268-881f-813a60dbb775",
+        "Type": "CLI.Battery",
+        "Interface": "Interfaces.IStorage",
+        "Data": {
+            "Capacity": 100,
+            "SoC": 70,
+            "Voltage": 400,
+            "Current": 0,
+            "CRate": 0.6
+        }
+    },{
+        "Name": "TestBattery3",
+        "Id": "0729f238-3628-4268-881f-813a60dbb776",
+        "Type": "CLI.Battery",
+        "Interface": "Interfaces.IStorage",
+        "Data": {
+            "Capacity": 500,
+            "SoC": 50,
+            "Voltage": 400,
+            "Current": 0,
+            "CRate": 0.2
+        }
+    },{
+        "Name": "TestBattery4",
+        "Id": "0729f238-3628-4268-881f-813a60dbb777",
+        "Type": "CLI.Battery",
+        "Interface": "Interfaces.IStorage",
+        "Data": {
+            "Capacity": 20,
+            "SoC": 100,
+            "Voltage": 400,
+            "Current": 0,
+            "CRate": 1
+        }
+    }
+]

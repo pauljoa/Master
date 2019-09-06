@@ -21,12 +21,18 @@ namespace Simulator
         public static IDictionary<Guid, List<Snapshot>> Snapshots = new Dictionary<Guid, List<Snapshot>>();
         static void Main(string[] args)
         {
+            Syntheziser.Generate(1000);
             Caches.Initialize();
             IAlgorithm algo = AlgorithmLoader.Load("Algorithms.SimpleAlgorithm");
             //Sample configuration parsing
-            String JsonString = File.ReadAllText(@"C:\Users\PaulJoakim\source\repos\Master\DllLoadTest\Debug\config.txt");
+            String JsonString = File.ReadAllText(@"C:\Users\paulj\source\repos\Master\Repositories\Configs\config.txt");
             IDictionary<Guid, ISysComponent> components = JSONParser.ParseConfig(JsonString);
-            List<CSVFormat> demand = CSVParser.Parse("C:\\Users\\PaulJoakim\\source\\repos\\Master\\Simulator\\Simulator\\Data\\demand.csv").ToList();
+            List<CSVFormat> demand = CSVParser.Parse(@"C:\Users\paulj\Source\Repos\Master\Repositories\Demand\demand.csv").ToList();
+            if(demand.Count == 0)
+            {
+                Console.WriteLine("No load demand data found, exiting");
+                return;
+            }
            
             int time = 0;
             
@@ -66,24 +72,24 @@ namespace Simulator
                 List<string> mappedProps = new List<string>();
                 foreach (var property in properties)
                 {
-                    if (property.Name == "Id" || property.Name == "Name" || property.Name == "Steps")
+                    if (property.Name == "Id" || property.Name == "Name" || property.Name == "Steps" || property.Name == "Instance")
                     {
                         continue;
                     }
-                    if(property.Name == "Instance")
-                    {
-                        var instance = property.GetValue(c);
-                        PropertyInfo[] props = instance.GetType().GetProperties();
-                        foreach(var prop in props)
-                        {
-                            if(!mappedProps.Contains(prop.Name))
-                            {
-                                propertySnap.Add("Internal."+prop.Name, prop.GetValue(instance));
-                                mappedProps.Add(prop.Name);
-                            }
-                        }
-                        continue;
-                    }
+                    //if(property.Name == "Instance")
+                    //{
+                    //    var instance = property.GetValue(c);
+                    //    PropertyInfo[] props = instance.GetType().GetProperties();
+                    //    foreach(var prop in props)
+                    //    {
+                    //        if(!mappedProps.Contains(prop.Name))
+                    //        {
+                    //            propertySnap.Add("Internal."+prop.Name, prop.GetValue(instance));
+                    //            mappedProps.Add(prop.Name);
+                    //        }
+                    //    }
+                    //    continue;
+                    //}
                     if (!mappedProps.Contains(property.Name))
                     {
                         propertySnap.Add(property.Name, property.GetValue(c));
@@ -104,7 +110,6 @@ namespace Simulator
                 }
             }
         }
-
     }
     public class Snapshot
     {
