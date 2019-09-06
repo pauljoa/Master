@@ -45,7 +45,7 @@ namespace Simulator.Utility
                 }
                 else
                 {
-                    return CopyValues(source, (ISysComponent)instance);
+                    return BindToInstance(source, (ISysComponent)instance);
                 }
             }
             else
@@ -59,7 +59,9 @@ namespace Simulator.Utility
                     | MethodAttributes.HideBySig | MethodAttributes.SpecialName
                     | MethodAttributes.RTSpecialName, CallingConventions.Standard, GetConstructorParams(Interface));
                 var cstrGenerator = cstrBuilder.GetILGenerator();
+                //Load "This" instance reference
                 cstrGenerator.Emit(OpCodes.Ldarg_0);
+                //Call the default constructor for the type
                 cstrGenerator.Emit(OpCodes.Call, typeof(object).GetConstructor(Type.EmptyTypes));
 
                 var fieldsList = new List<string>();
@@ -68,9 +70,10 @@ namespace Simulator.Utility
                 var index = 0;
                 foreach (var ancestor in interfaces)
                 {
-                    ImplementAncestors(ancestor, ref fieldsList, ref type, ref cstrBuilder, ref cstrGenerator, ref paramList,ref index);
+                    ImplementInterface(ancestor, ref fieldsList, ref type, ref cstrBuilder, ref cstrGenerator, ref paramList,ref index);
                 }
-                ImplementAncestors(Interface, ref fieldsList, ref type, ref cstrBuilder, ref cstrGenerator, ref paramList,ref index);
+                ImplementInterface(Interface, ref fieldsList, ref type, ref cstrBuilder, ref cstrGenerator, ref paramList,ref index);
+                //Return from the constructor
                 cstrGenerator.Emit(OpCodes.Ret);
                 newType = type.CreateType();
                 Implementations.Add(Interface, newType);
@@ -85,7 +88,7 @@ namespace Simulator.Utility
                 }
                 else
                 {
-                    return CopyValues(source, (ISysComponent)instance);
+                    return BindToInstance(source, (ISysComponent)instance);
                     //return BindToInstance(Interface, ret);
                 }
             }
@@ -149,7 +152,7 @@ namespace Simulator.Utility
         /// <param name="ctrGenerator">Reference IL generator for the constructor</param>
         /// <param name="paramTypes">Reference list containing generated Delegates to be used in the constructor </param>
         /// <param name="index"> Reference parameter index for constructor</param>
-        private static void ImplementAncestors(Type Interface, ref List<string> fieldsList, ref TypeBuilder type,ref ConstructorBuilder ctr,ref ILGenerator ctrGenerator,ref List<TypeHelper> paramTypes,ref int index)
+        private static void ImplementInterface(Type Interface, ref List<string> fieldsList, ref TypeBuilder type,ref ConstructorBuilder ctr,ref ILGenerator ctrGenerator,ref List<TypeHelper> paramTypes,ref int index)
         {
             type.AddInterfaceImplementation(Interface);
             foreach (var v in Interface.GetProperties())
@@ -184,9 +187,7 @@ namespace Simulator.Utility
                     ILGenerator mGen = newMethod.GetILGenerator();
                     mGen.Emit(OpCodes.Ldarg_0);
                     mGen.Emit(OpCodes.Ldfld, delegateField);
-
                     mGen.EmitCall(OpCodes.Callvirt, del.GetMethod("Invoke"), null);
-
                     mGen.Emit(OpCodes.Ret);
                     property.SetGetMethod(newMethod);
                     type.DefineMethodOverride(newMethod,v.GetGetMethod());
@@ -196,6 +197,7 @@ namespace Simulator.Utility
 
                 }
                 //If setter is specified in interface definition
+                //TODO: REWRITE TO DELEGATE BASED GENERATOR
                 if (v.GetSetMethod() != null)
                 {
                     MethodBuilder setter = type.DefineMethod("set_" + v.Name, MethodAttributes.Public | MethodAttributes.SpecialName | MethodAttributes.Virtual, null, new Type[] { v.PropertyType });
@@ -236,17 +238,20 @@ namespace Simulator.Utility
                         MethodAttributes.Final | MethodAttributes.HideBySig 
                 |       MethodAttributes.NewSlot, m.CallingConvention,m.ReturnType,parameterTypes.ToArray());
                     ILGenerator mGen = newMethod.GetILGenerator();
+                    //This instance
                     mGen.Emit(OpCodes.Ldarg_0);
+                    //Load the delegate
                     mGen.Emit(OpCodes.Ldfld, delegateField);
-
+                    //Load the method parameters onto the evaluation stack
                     byte paramIndex = 1;
                     foreach(var param in m.GetParameters())
                     {
                         mGen.Emit(OpCodes.Ldarg_S, paramIndex);
                         paramIndex++;
                     }
+                    //Invoke the delegate with the loaded parameters
                     mGen.EmitCall(OpCodes.Callvirt, del.GetMethod("Invoke"), null);
-
+                    //The return value of the delegate
                     mGen.Emit(OpCodes.Ret);
                     index++;
                 }
@@ -352,9 +357,10 @@ namespace Simulator.Utility
                 var method = newType.GetMethod(name);
                 //Parameters of newType method
                 var methodParameters = method.GetParameters();
-                //Found method in the model instance
+                //Found method in the model instance, 
+                //currently not used as the method in newtype has the same signature and name.
                 MethodInfo InstanceMethod = source.Instance.GetType().GetMethod(name);
-
+                //TODO:search algorithm
                 if (InstanceMethod == null)
                 {
                     if (name.StartsWith("get_".ToLower()))
@@ -407,7 +413,7 @@ namespace Simulator.Utility
         /// <param name="source">The source instance to be copied from</param>
         /// <param name="destination">The new type instance</param>
         /// <returns></returns>
-        private static K CopyValues<K>(SysComponent source, K destination)
+        private static K BindToInstance<K>(SysComponent source, K destination)
         {
             foreach (PropertyInfo property in source.GetType().GetProperties(visibilityFlags))
             {

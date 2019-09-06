@@ -8,14 +8,29 @@ using System.Threading.Tasks;
 
 namespace Simulator.Utility
 {
+    /// <summary>
+    /// Container class for cache implementations
+    /// </summary>
     public static class Caches
     {
+        /// <summary>
+        /// Cache for Interface types
+        /// </summary>
         public static Dictionary<String, Type> Interfaces = new Dictionary<String, Type>();
-
+        /// <summary>
+        /// Cache for Model types
+        /// </summary>
         public static Dictionary<String, Type> Models = new Dictionary<String, Type>();
-
+        /// <summary>
+        /// Cache for Algorithm types
+        /// </summary>
         public static Dictionary<String, Type> Algorithms = new Dictionary<String, Type>();
 
+        /// <summary>
+        /// Populate the caches
+        /// FUTURE TODO: parameterize init method and removal of hard coded paths,
+        /// sufficient while in development
+        /// </summary>
         public static void Initialize()
         {
             //Old Explicit methods
@@ -107,24 +122,22 @@ namespace Simulator.Utility
         #endregion
 
         /// <summary>
-        /// Loads all assemblies found in the given path, and adds them to the specified cache
+        /// Loads all assemblies found in the given path,inspects all exposed types and adds them to the specified cache
         /// </summary>
         /// <param name="path">Directory path to </param>
-        /// <param name="cache"></param>
+        /// <param name="cache">Type of Cache to populate with types found</param>
         private static void GetAssembliesFromRepository(string path, CacheType cache)
         {
             DirectoryInfo dir = new DirectoryInfo(@"" + path);
-            FileInfo[] Files = dir.GetFiles("*.dll");
-
-
-            foreach (var file in Files)
+            //FileInfo[] Files = dir.GetFiles("*.dll");
+            foreach (var file in dir.GetFiles("*.dll"))
             {
                 var Dll = Assembly.LoadFrom(file.FullName);
 
                 try
                 {
-                    var typeList = Dll.GetExportedTypes();
-                    foreach (var type in typeList)
+                   //var typeList = Dll.GetExportedTypes();
+                    foreach (var type in Dll.GetExportedTypes())
                     {
                         switch(cache)
                         {
@@ -148,9 +161,10 @@ namespace Simulator.Utility
                 }
             }
         }
-
-
     }
+    /// <summary>
+    /// Enumeration for Cache Types
+    /// </summary>
     enum CacheType
     {
         Model,

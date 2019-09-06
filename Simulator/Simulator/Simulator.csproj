@@ -69,6 +69,7 @@
     <None Include="App.config" />
     <None Include="Class Diagrams\ClassDiagram1.cd" />
     <None Include="ClassDiagram1.cd" />
+    <None Include="ClassDiagram2.cd" />
     <None Include="packages.config" />
   </ItemGroup>
   <ItemGroup>

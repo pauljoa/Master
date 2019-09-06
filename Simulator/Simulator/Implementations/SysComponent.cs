@@ -20,7 +20,6 @@ namespace Simulator.Implementations
             Name = name;
             Steps = new List<Tuple<double, double>>();
         }
-
         public dynamic Instance { get; set; }
         public IList<Tuple<double, double>> Steps { get; set; }
 
@@ -38,6 +37,8 @@ namespace Simulator.Implementations
                     //Error
                     return false;
                 }
+                //Assuming only 1 constructor, 
+                //builds a parameterlist with values and types equal to the constructor params.
                 var parameterInfo = model.GetConstructors().First().GetParameters();
                 List<object> parameters = new List<object>();
                 foreach (var info in parameterInfo)
@@ -56,6 +57,7 @@ namespace Simulator.Implementations
 
                     parameters.Add(value);
                 }
+                //Instantiate with the built parameterlist
                 Instance = Activator.CreateInstance(model, parameters.ToArray());
                 return true;
             }

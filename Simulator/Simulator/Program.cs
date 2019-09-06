@@ -13,6 +13,9 @@ using System.IO;
 
 namespace Simulator
 {
+    /// <summary>
+    /// Facilitator Implementation
+    /// </summary>
     class Program
     {
         public static IDictionary<Guid, List<Snapshot>> Snapshots = new Dictionary<Guid, List<Snapshot>>();
@@ -44,7 +47,6 @@ namespace Simulator
 
             foreach (var snap in Snapshots)
             {
-                
                 using (StreamWriter file = File.CreateText(Path.Combine(path, String.Format("{0}_Snapshots.txt", snap.Key.ToString()))))
                 {
                     JsonSerializer serializer = new JsonSerializer();
