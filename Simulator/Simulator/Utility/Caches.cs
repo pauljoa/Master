@@ -38,9 +38,9 @@ namespace Simulator.Utility
             //GetInterfacesFromRepository(@"C:\Users\PaulJoakim\Source\Repos\Master\InterfaceRepository");
             //GetModelsFromRepository(@"C:\Users\PaulJoakim\Source\Repos\Master\ModelRepository");
             //Consolidated into one method
-            GetAssembliesFromRepository(@"C:\Users\paulj\source\repos\Master\Repositories\Algorithms", CacheType.Algorithm);
-            GetAssembliesFromRepository(@"C:\Users\paulj\source\repos\Master\Repositories\Interfaces", CacheType.Interface);
-            GetAssembliesFromRepository(@"C:\Users\paulj\source\repos\Master\Repositories\Models", CacheType.Model);
+            GetAssembliesFromRepository(@"C:\Users\PaulJoakim\source\repos\Master\Repositories\Algorithms", CacheType.Algorithm);
+            GetAssembliesFromRepository(@"C:\Users\PaulJoakim\source\repos\Master\Repositories\Interfaces", CacheType.Interface);
+            GetAssembliesFromRepository(@"C:\Users\PaulJoakim\source\repos\Master\Repositories\Models", CacheType.Model);
             
         }
 

@@ -46,6 +46,8 @@ namespace Visualizer
                 List<Snapshot> snapshots = JsonConvert.DeserializeObject<List<Snapshot>>(modelLog);
                 // Dictionary<String, bool> properties = new Dictionary<string, bool>();
                 Dictionary<String, List<double>> series = new Dictionary<string, List<double>>();
+                //int count = snapshots.Count;
+                //int sampleRate = count / 3000;
                 foreach (var snap in snapshots)
                 {
                     
@@ -63,23 +65,29 @@ namespace Visualizer
                         }
                     }
                 }
+
                 foreach(var valuePair in series)
                 {
                     if (valuePair.Key != "Capacity" && valuePair.Key != "MaxRate" && valuePair.Key != "Voltage")
                     {
+                        //var test = valuePair.Value.Where((x, i) => i % sampleRate == 0).ToList();
                         SeriesCollection.Add(new GLineSeries()
                         {
                             Title = valuePair.Key,
-                            Values = new ChartValues<double>(valuePair.Value),
+                            Values = new ChartValues<double>(valuePair.Value)
                         });
 
                     }
                 }
                 YFormatter = value => value.ToString("0.##");
                 List<String> labels = new List<String>();
-                foreach(var s in snapshots)
+                //foreach(var s in snapshots)
+                //{
+                //    labels.Add(s.Timestamp.ToString());
+                //}
+                for(var i = 0;i<3000;i++)
                 {
-                    labels.Add(s.Timestamp.ToString());
+                    labels.Add(i.ToString());
                 }
                 Labels = labels.ToArray();
             }

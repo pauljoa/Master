@@ -15,45 +15,64 @@ namespace Simulator.Utility
         {
             List<CSVFormat> demand = new List<CSVFormat>();
             Random random = new Random();
-            Double MaxLoad = random.Next(10000, 50000);
+            Double MaxLoad = random.Next(20000, 40000);
+            Double PowerLast = MaxLoad;
             for (var i = 0;i<length;i++)
             {
-                Double d = (Double) i / length;
-                //Start of journey
-                if(d < 0.1)
+                //Double d = (Double) i / length;
+                ////Start of journey
+                //if(d < 0.1)
+                //{
+                var check = (random.Next(0, 100)) >= 50;
+                if(check)
                 {
-                    Double Power = MaxLoad*((Double)random.Next(250000,300000)/1000000);
-                    demand.Add(new CSVFormat(i, Power));
-                    Debug.WriteLine("Time: {0} Power: {1}",i,Power);
+                    PowerLast = PowerLast + ((Double)random.Next(200, 300));
                 }
-                else if (d < 0.2)
+                else
                 {
-                    Double Power = MaxLoad * ((Double)random.Next(300000, 400000) / 1000000);
-                    demand.Add(new CSVFormat(i, Power));
-                    Debug.WriteLine("Time: {0} Power: {1}", i, Power);
+                    PowerLast = PowerLast - ((Double)random.Next(200, 400));
                 }
-                else if (d < 0.3)
+                if(PowerLast < MaxLoad/2)
                 {
-                    Double Power = MaxLoad * ((Double)random.Next(400000, 500000) / 1000000);
-                    demand.Add(new CSVFormat(i, Power));
-                    Debug.WriteLine("Time: {0} Power: {1}", i, Power);
+                    PowerLast = PowerLast * 1.2;
                 }
-                //middle of journey
-                else if(d >= 0.3 && d <0.7)
+                else if(PowerLast > MaxLoad*1.5)
                 {
-                    Double Power = MaxLoad * ((Double)random.Next(700000, 850000) / 1000000);
-                    demand.Add(new CSVFormat(i, Power));
-                    Debug.WriteLine("Time: {0} Power: {1}", i, Power);
+                    PowerLast = PowerLast * 0.8;
                 }
-                //End of journey
-                else if(d >= 0.7)
-                {
-                    Double Power = MaxLoad * ((Double)random.Next(800000, 950000) / 1000000);
-                    demand.Add(new CSVFormat(i, Power));
-                    Debug.WriteLine("Time: {0} Power: {1}",i,Power);
-                }
+                /*PowerLast = PowerLast + ((Double)random.Next(100, 300));*/ /** ((Double)random.Next(290000, 300000) / 1000000);*/
+                
+                demand.Add(new CSVFormat(i, PowerLast));
+                Debug.WriteLine("Time: {0} Power: {1}", i, PowerLast);
+                //}
+                //else if (d < 0.2)
+                //{
+                //    Double Power = MaxLoad * ((Double)random.Next(350000, 380000) / 1000000);
+                //    demand.Add(new CSVFormat(i, Power));
+                //    Debug.WriteLine("Time: {0} Power: {1}", i, Power);
+                //}
+                //else if (d < 0.3)
+                //{
+                //    Double Power = MaxLoad * ((Double)random.Next(450000, 480000) / 1000000);
+                //    demand.Add(new CSVFormat(i, Power));
+                //    Debug.WriteLine("Time: {0} Power: {1}", i, Power);
+                //}
+                ////middle of journey
+                //else if(d >= 0.3 && d <0.7)
+                //{
+                //    Double Power = MaxLoad * ((Double)random.Next(800000, 830000) / 1000000);
+                //    demand.Add(new CSVFormat(i, Power));
+                //    Debug.WriteLine("Time: {0} Power: {1}", i, Power);
+                //}
+                ////End of journey
+                //else if(d >= 0.7)
+                //{
+                //    Double Power = MaxLoad * ((Double)random.Next(900000, 930000) / 1000000);
+                //    demand.Add(new CSVFormat(i, Power));
+                //    Debug.WriteLine("Time: {0} Power: {1}",i,Power);
+                //}
             }
-            using (var writer = new StreamWriter(@"C:\Users\paulj\Source\Repos\Master\Repositories\Demand\demand.csv"))
+            using (var writer = new StreamWriter(@"C:\Users\PaulJoakim\Source\Repos\Master\Repositories\Demand\demand.csv"))
             {
                 using (var csv = new CsvWriter(writer))
                 {
